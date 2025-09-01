@@ -1,0 +1,5 @@
+{
+  "name": "Track your habits",
+  "description": "Un'app intelligente per monitorare la tua dieta usando Gemini per analizzare i pasti.",
+  "requestFramePermissions": []
+}
