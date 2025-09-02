@@ -1,21 +1,25 @@
 
 import React, { useState } from 'react';
 import { RoutineImportModal } from '../components/RoutineImportModal';
-import { WorkoutRoutine, WorkoutSession } from '../types/index';
+import { WorkoutRoutine, WorkoutSession, NutritionGoals } from '../types/index';
 import { generateUniqueId, formatDuration } from '../types/utils/helpers';
+import { analyzeWorkoutPlanWithGemini } from '../services/geminiService';
 
 interface AllenamentoViewProps {
     routines: WorkoutRoutine[];
     history: WorkoutSession[];
+    goals: NutritionGoals;
     onSaveRoutines: (routines: WorkoutRoutine[]) => void;
     onStartWorkout: (routine: WorkoutRoutine) => void;
     onEditSession: (session: WorkoutSession) => void;
     onDeleteSession: (sessionId: string) => void;
 }
 
-export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, history, onSaveRoutines, onStartWorkout, onEditSession, onDeleteSession }) => {
+export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, history, goals, onSaveRoutines, onStartWorkout, onEditSession, onDeleteSession }) => {
     const [tab, setTab] = useState<'schede' | 'storico'>('schede');
     const [isImportModalOpen, setImportModalOpen] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [analysisResult, setAnalysisResult] = useState('');
 
     const handleImport = (importedRoutines: Omit<WorkoutRoutine, 'id'>[]) => {
         const newRoutines: WorkoutRoutine[] = importedRoutines.map(r => ({
@@ -31,6 +35,25 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
             onSaveRoutines(routines.filter(r => r.id !== id));
         }
     }
+
+    const handleAnalyzeWorkoutPlan = async () => {
+        if (routines.length === 0) {
+            alert("Aggiungi almeno una scheda di allenamento per ottenere una valutazione.");
+            return;
+        }
+
+        setIsAnalyzing(true);
+        setAnalysisResult('');
+        try {
+            const analysis = await analyzeWorkoutPlanWithGemini(routines, history, goals);
+            setAnalysisResult(analysis);
+        } catch (error: any) {
+            console.error("Failed to analyze workout plan:", error);
+            alert(error.message);
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
 
     return (
         <>
@@ -63,7 +86,17 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                             <span className="material-symbols-outlined">upload</span>
                             Importa con AI
                         </button>
+                        <button className="btn-secondary" onClick={handleAnalyzeWorkoutPlan} disabled={isAnalyzing}>
+                            <span className="material-symbols-outlined">psychology</span>
+                            {isAnalyzing ? "Analizzando..." : "Valuta Piano"}
+                        </button>
                     </div>
+                    {analysisResult && (
+                        <div className="card" style={{marginTop: '16px'}}>
+                            <h4>Valutazione del Piano di Allenamento</h4>
+                            <div style={{whiteSpace: 'pre-wrap', lineHeight: '1.6'}}>{analysisResult}</div>
+                        </div>
+                    )}
                 </div>
             )}
             

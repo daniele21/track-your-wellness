@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { FoodItem, WorkoutRoutine, NutritionGoals, ExerciseDefinition } from '../types/index';
+import { FoodItem, WorkoutRoutine, NutritionGoals, ExerciseDefinition, WorkoutSession, DailyLog, Goal } from '../types/index';
 import { logError } from '../views/loggingService';
 import { authService } from './authService';
 
@@ -171,8 +171,8 @@ export const getDailyTipWithGemini = async (goals: NutritionGoals): Promise<stri
     
     const model = "gemini-2.5-flash";
     const goalsString = (Object.keys(goals) as Array<keyof NutritionGoals>)
-        .filter(key => goals[key].enabled)
-        .map(key => `${key}: ${goals[key].value}${key === 'kcal' ? '' : 'g'}`)
+        .filter(key => key !== 'workoutGoalDescription' && (goals[key] as Goal).enabled)
+        .map(key => `${key}: ${(goals[key] as Goal).value}${key === 'kcal' ? '' : 'g'}`)
         .join(', ');
 
     const prompt = `Sei un coach motivazionale di fitness e nutrizione. Basandoti sugli obiettivi dell'utente (${goalsString}), fornisci un consiglio breve, utile e motivazionale per la giornata (massimo 2-3 frasi). Varia i consigli ogni giorno. Esempio: "Ricorda di idratarti bene oggi! L'acqua è fondamentale per i tuoi obiettivi di fitness." Oppure: "Un piccolo spuntino proteico nel pomeriggio può aiutarti a raggiungere il tuo target di proteine e a mantenerti sazio." Rispondi solo con il testo del consiglio.`;
@@ -207,5 +207,154 @@ export const generateShoppingListWithGemini = async (items: FoodItem[]): Promise
         console.error("Errore durante la generazione della lista della spesa:", error);
         logError(error, { action: 'generateShoppingListWithGemini', itemCount: items.length });
         throw new Error("Impossibile generare la lista della spesa.");
+    }
+};
+
+export const analyzeWorkoutPlanWithGemini = async (
+    routines: WorkoutRoutine[], 
+    workoutSessions: WorkoutSession[], 
+    goals: NutritionGoals
+): Promise<string> => {
+    // Check authentication before making API call
+    await requireAuth();
+    
+    const model = "gemini-2.5-flash";
+    
+    // Prepara i dati delle routine
+    const routinesData = routines.map(routine => ({
+        name: routine.name,
+        description: routine.description,
+        exercises: routine.exercises.map(ex => `${ex.name} ${ex.sets}x${ex.reps}`)
+    }));
+    
+    // Prepara i dati delle sessioni recenti (ultime 4 settimane)
+    const fourWeeksAgo = new Date();
+    fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
+    
+    const recentSessions = workoutSessions
+        .filter(session => new Date(session.date) >= fourWeeksAgo)
+        .map(session => ({
+            date: session.date,
+            routineName: session.routineName,
+            duration: Math.round(session.duration / 60), // converti in minuti
+            exercises: session.exercises.length
+        }));
+    
+    const workoutGoal = goals.workoutGoalDescription || "Obiettivo non specificato";
+    const weeklyTarget = goals.weeklyWorkouts.enabled ? goals.weeklyWorkouts.value : "Non specificato";
+    
+    const prompt = `Sei un personal trainer esperto. Analizza il piano di allenamento dell'utente e fornisci una valutazione costruttiva e consigli specifici.
+
+OBIETTIVO UTENTE: ${workoutGoal}
+TARGET ALLENAMENTI SETTIMANALI: ${weeklyTarget}
+
+SCHEDE DISPONIBILI:
+${routinesData.map(r => `- ${r.name}: ${r.description}\n  Esercizi: ${r.exercises.join(', ')}`).join('\n')}
+
+ALLENAMENTI RECENTI (ultime 4 settimane):
+${recentSessions.length > 0 ? 
+    recentSessions.map(s => `- ${s.date}: ${s.routineName} (${s.duration} min, ${s.exercises} esercizi)`).join('\n') : 
+    'Nessun allenamento registrato nelle ultime 4 settimane'
+}
+
+Fornisci una valutazione in 3-4 paragrafi che includa:
+1. Valutazione della coerenza tra routine e obiettivi
+2. Analisi della frequenza e consistenza degli allenamenti
+3. Consigli specifici per migliorare (esercizi, frequenza, programmazione)
+4. Suggerimenti motivazionali personalizzati
+
+Usa un tono professionale ma incoraggiante. Massimo 300 parole.`;
+
+    try {
+        const response = await ai.models.generateContent({ model, contents: prompt });
+        return response.text;
+    } catch (error) {
+        console.error("Errore durante l'analisi del piano di allenamento:", error);
+        logError(error, { action: 'analyzeWorkoutPlanWithGemini' });
+        throw new Error("Impossibile analizzare il piano di allenamento. Riprova più tardi.");
+    }
+};
+
+export const analyzeMealPlanWithGemini = async (
+    dailyLogs: { [date: string]: DailyLog },
+    workoutSessions: WorkoutSession[],
+    goals: NutritionGoals
+): Promise<string> => {
+    // Check authentication before making API call
+    await requireAuth();
+    
+    const model = "gemini-2.5-flash";
+    
+    // Analizza i pasti delle ultime 2 settimane
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    
+    const recentDates = Object.keys(dailyLogs)
+        .filter(date => new Date(date) >= twoWeeksAgo)
+        .sort()
+        .slice(-14); // ultime 2 settimane
+    
+    // Calcola i totali giornalieri
+    const dailyTotals = recentDates.map(date => {
+        const log = dailyLogs[date];
+        if (!log) return null;
+        
+        const allItems: FoodItem[] = [];
+        (Object.values(log) as FoodItem[][]).forEach(meal => {
+            if (meal) allItems.push(...meal);
+        });
+        
+        return {
+            date,
+            kcal: allItems.reduce((sum, item) => sum + item.kcal, 0),
+            protein: allItems.reduce((sum, item) => sum + item.protein, 0),
+            carbs: allItems.reduce((sum, item) => sum + item.carbs, 0),
+            fats: allItems.reduce((sum, item) => sum + item.fats, 0)
+        };
+    }).filter(Boolean);
+    
+    // Analizza gli allenamenti recenti
+    const recentWorkouts = workoutSessions
+        .filter(session => new Date(session.date) >= twoWeeksAgo)
+        .length;
+    
+    const avgKcal = dailyTotals.length > 0 ? 
+        Math.round(dailyTotals.reduce((sum, day) => sum + day!.kcal, 0) / dailyTotals.length) : 0;
+    const avgProtein = dailyTotals.length > 0 ? 
+        Math.round(dailyTotals.reduce((sum, day) => sum + day!.protein, 0) / dailyTotals.length) : 0;
+    
+    const workoutGoal = goals.workoutGoalDescription || "Obiettivo non specificato";
+    
+    const prompt = `Sei un nutrizionista sportivo esperto. Analizza l'alimentazione dell'utente e fornisci consigli personalizzati.
+
+OBIETTIVI NUTRIZIONALI:
+- Calorie: ${goals.kcal.enabled ? goals.kcal.value : 'Non specificato'} kcal
+- Proteine: ${goals.protein.enabled ? goals.protein.value : 'Non specificato'} g
+- Carboidrati: ${goals.carbs.enabled ? goals.carbs.value : 'Non specificato'} g
+- Grassi: ${goals.fats.enabled ? goals.fats.value : 'Non specificato'} g
+
+OBIETTIVO ALLENAMENTO: ${workoutGoal}
+
+DATI RECENTI (ultime 2 settimane):
+- Media calorie giornaliere: ${avgKcal} kcal
+- Media proteine giornaliere: ${avgProtein} g
+- Allenamenti completati: ${recentWorkouts}
+- Giorni con dati: ${dailyTotals.length}/14
+
+Fornisci una valutazione in 3-4 paragrafi che includa:
+1. Confronto tra intake attuale e obiettivi
+2. Coerenza tra alimentazione e obiettivi di allenamento
+3. Consigli specifici per miglioramenti (timing, macronutrienti, idratazione)
+4. Suggerimenti pratici per i prossimi giorni
+
+Usa un tono professionale ma incoraggiante. Massimo 300 parole.`;
+
+    try {
+        const response = await ai.models.generateContent({ model, contents: prompt });
+        return response.text;
+    } catch (error) {
+        console.error("Errore durante l'analisi del piano alimentare:", error);
+        logError(error, { action: 'analyzeMealPlanWithGemini' });
+        throw new Error("Impossibile analizzare il piano alimentare. Riprova più tardi.");
     }
 };

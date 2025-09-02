@@ -20,6 +20,7 @@ export interface NutritionGoals {
     fats: Goal;
     fiber: Goal;
     weeklyWorkouts: Goal;
+    workoutGoalDescription?: string; // Obiettivo di allenamento in linguaggio naturale
 }
 
 export type MealType = 'Colazione' | 'Spuntino' | 'Pranzo' | 'Cena';
@@ -95,4 +96,5 @@ export const DEFAULT_GOALS: NutritionGoals = {
     fats: { value: 67, enabled: true },
     fiber: { value: 30, enabled: true },
     weeklyWorkouts: { value: 3, enabled: true },
+    workoutGoalDescription: '',
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // Import MEAL_TYPES to iterate over daily logs safely.
-import { DailyLog, NutritionGoals, Theme, FoodItem, MEAL_TYPES } from '../types/index';
+import { DailyLog, NutritionGoals, Theme, FoodItem, MEAL_TYPES, Goal } from '../types/index';
 import { generateShoppingListWithGemini } from '../services/geminiService';
 
 interface ProfileViewProps {
@@ -17,9 +17,11 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ goals, onUpdateGoals, 
     const [shoppingList, setShoppingList] = useState('');
     
     const handleGoalChange = (key: keyof NutritionGoals, field: 'value' | 'enabled', value: number | boolean) => {
+        if (key === 'workoutGoalDescription') return; // Gestito separatamente
+        
         setLocalGoals(prev => ({
             ...prev,
-            [key]: { ...prev[key], [field]: value }
+            [key]: { ...(prev[key] as Goal), [field]: value }
         }));
     };
     
@@ -80,22 +82,24 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ goals, onUpdateGoals, 
             <div className="card">
                 <h3>Obiettivi Nutrizionali</h3>
                 <div className="goals-editor">
-                    {(Object.keys(localGoals) as Array<keyof NutritionGoals>).filter(key => key !== 'weeklyWorkouts').map(key => (
-                        <div key={key} className={`goal-input-group ${!localGoals[key].enabled ? 'disabled' : ''}`}>
+                    {(Object.keys(localGoals) as Array<keyof NutritionGoals>)
+                        .filter(key => key !== 'weeklyWorkouts' && key !== 'workoutGoalDescription')
+                        .map(key => (
+                        <div key={key} className={`goal-input-group ${!(localGoals[key] as Goal).enabled ? 'disabled' : ''}`}>
                             <label htmlFor={`goal-${key}`}>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
                             <div className="input-wrapper">
                                 <input
                                     id={`goal-${key}`}
                                     type="number"
-                                    value={localGoals[key].value}
+                                    value={(localGoals[key] as Goal).value}
                                     onChange={e => handleGoalChange(key, 'value', parseInt(e.target.value) || 0)}
-                                    disabled={!localGoals[key].enabled}
+                                    disabled={!(localGoals[key] as Goal).enabled}
                                 />
                                 <span>{key === 'kcal' ? 'kcal' : 'g'}</span>
                                 <label className="toggle-switch">
                                     <input
                                         type="checkbox"
-                                        checked={localGoals[key].enabled}
+                                        checked={(localGoals[key] as Goal).enabled}
                                         onChange={e => handleGoalChange(key, 'enabled', e.target.checked)}
                                     />
                                     <span className="slider"></span>
@@ -128,6 +132,19 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ goals, onUpdateGoals, 
                                 <span className="slider"></span>
                             </label>
                         </div>
+                    </div>
+                    <div className="form-group" style={{marginTop: '16px'}}>
+                        <label htmlFor="workout-goal-description">Obiettivo di allenamento (descrizione)</label>
+                        <textarea
+                            id="workout-goal-description"
+                            rows={3}
+                            placeholder="Descrivi il tuo obiettivo di allenamento (es. 'Voglio aumentare la massa muscolare e migliorare la forza negli esercizi compound')"
+                            value={localGoals.workoutGoalDescription || ''}
+                            onChange={e => setLocalGoals(prev => ({
+                                ...prev,
+                                workoutGoalDescription: e.target.value
+                            }))}
+                        />
                     </div>
                 </div>
             </div>
