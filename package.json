@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "audit": "npm audit",
     "audit-fix": "npm audit fix",
-    "security-check": "npm audit && echo 'Security check completed. Review any vulnerabilities above.'"
+    "security-check": "npm audit && echo 'Security check completed. Review any vulnerabilities above.'",
+    "deploy:firebase": "./scripts/deploy-firebase.sh",
+    "build:prod": "source .env.local && npm run build"
   },
   "dependencies": {
     "react": "^19.1.1",
