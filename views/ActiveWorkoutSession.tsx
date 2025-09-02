@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Header } from '../components/Header';
 import { NumberInput } from '../components/NumberInput';
 import { WorkoutSession } from '../types/index';
-import { formatDuration } from '../utils/helpers';
+import { formatDuration } from '../types/utils/helpers';
 
 interface ActiveWorkoutSessionProps {
     session: WorkoutSession;
@@ -11,53 +12,42 @@ interface ActiveWorkoutSessionProps {
 }
 
 export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({ session, onUpdateSession, onFinishSession }) => {
-    console.log('ActiveWorkoutSession: Component rendered.');
-
     const [duration, setDuration] = useState(session.duration);
     const [restTimer, setRestTimer] = useState(0);
-    const [customRestTime, setCustomRestTime] = useState('');
+    const [isTimerSetupVisible, setIsTimerSetupVisible] = useState(false);
+    const [customRestTime, setCustomRestTime] = useState(90);
     
     const isFinishingRef = useRef(false);
 
     // Main session duration timer
     useEffect(() => {
-        console.log('ActiveWorkoutSession: Duration timer effect setup.');
         const startTime = Date.now() - (session.duration * 1000);
         
         const intervalId = window.setInterval(() => {
             const newDuration = Math.floor((Date.now() - startTime) / 1000);
-            console.log(`ActiveWorkoutSession: Duration tick. isFinishing: ${isFinishingRef.current}, new duration: ${newDuration}`);
             if (!isFinishingRef.current) {
                 setDuration(newDuration);
             }
         }, 1000);
 
         return () => {
-            console.log('ActiveWorkoutSession: Duration timer effect cleanup. Clearing interval.');
             clearInterval(intervalId);
         };
     }, [session.id]); // Dependency on session.id ensures it resets only for a new session
 
     // Rest timer
     useEffect(() => {
-        console.log(`ActiveWorkoutSession: Rest timer effect setup. Current rest timer: ${restTimer}`);
         if (restTimer <= 0) {
             return;
         }
 
         const intervalId = window.setInterval(() => {
-            console.log(`ActiveWorkoutSession: Rest timer tick. isFinishing: ${isFinishingRef.current}`);
             if (!isFinishingRef.current) {
-                setRestTimer(prev => {
-                    const newTime = Math.max(0, prev - 1);
-                    console.log(`ActiveWorkoutSession: New rest time: ${newTime}`);
-                    return newTime;
-                });
+                setRestTimer(prev => Math.max(0, prev - 1));
             }
         }, 1000);
 
         return () => {
-            console.log('ActiveWorkoutSession: Rest timer effect cleanup. Clearing interval.');
             clearInterval(intervalId);
         };
     }, [restTimer]); // Reruns when restTimer value changes
@@ -65,7 +55,6 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({ sess
 
     const handleSetChange = (exIndex: number, setIndex: number, field: 'weight' | 'reps', value: number) => {
         if (isFinishingRef.current) {
-            console.log('ActiveWorkoutSession: handleSetChange blocked by isFinishingRef.');
             return;
         }
         const newExercises = [...session.exercises];
@@ -76,41 +65,35 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({ sess
     };
 
     const handleFinish = () => {
-        console.log('ActiveWorkoutSession: handleFinish called.');
         if (window.confirm("Sei sicuro di voler terminare l'allenamento?")) {
-            console.log('ActiveWorkoutSession: User confirmed finish. Setting isFinishingRef to true.');
             isFinishingRef.current = true;
             
             const finalSession = { ...session, duration };
-            console.log('ActiveWorkoutSession: Calling onFinishSession with final session:', finalSession);
             onFinishSession(finalSession);
-        } else {
-            console.log('ActiveWorkoutSession: User cancelled finish.');
         }
     };
     
     const startRestTimer = (seconds: number) => {
         if (seconds > 0) {
-            console.log(`ActiveWorkoutSession: Starting rest timer for ${seconds} seconds.`);
             setRestTimer(seconds);
+            setIsTimerSetupVisible(false);
         }
     };
 
     const handleStartCustomTimer = () => {
-        const time = parseInt(customRestTime, 10);
-        if (!isNaN(time) && time > 0) {
-            startRestTimer(time);
-            setCustomRestTime('');
+        if (customRestTime > 0) {
+            startRestTimer(customRestTime);
         }
     };
     
-    const handleResetTimer = () => {
-        console.log('ActiveWorkoutSession: Resetting rest timer.');
+    const handleAddRestTime = () => {
+        setRestTimer(t => t + 15);
+    };
+    
+    const handleCancelRestTimer = () => {
         setRestTimer(0);
     };
     
-    const REST_TIMES = [60, 90, 120];
-
     return (
         <div className="active-session">
             <Header title={session.routineName} actions={
@@ -145,34 +128,51 @@ export const ActiveWorkoutSession: React.FC<ActiveWorkoutSessionProps> = ({ sess
                     <span className="material-symbols-outlined">timer</span>
                     <span>{formatDuration(duration)}</span>
                 </div>
-                 <div className="rest-timer-controls">
-                    {restTimer > 0 ? (
-                        <div className="active-timer-display">
-                            <span className="timer-display">{formatDuration(restTimer)}</span>
-                            <button onClick={handleResetTimer} className="timer-reset-btn" aria-label="Resetta timer">
-                                <span className="material-symbols-outlined">replay</span>
-                            </button>
-                        </div>
-
-                    ) : (
-                        <>
-                            {REST_TIMES.map(time => (
-                                <button key={time} onClick={() => startRestTimer(time)}>{time}s</button>
-                            ))}
-                            <div className="custom-timer-controls">
-                                <input 
-                                    type="number" 
-                                    value={customRestTime}
-                                    onChange={(e) => setCustomRestTime(e.target.value)}
-                                    placeholder="secs"
-                                    aria-label="Tempo di riposo personalizzato in secondi"
-                                />
-                                <button onClick={handleStartCustomTimer} className="btn-primary" style={{padding: '6px'}}>Vai</button>
-                            </div>
-                        </>
-                    )}
-                </div>
+                 
+                {restTimer > 0 ? (
+                    <div className="active-timer-controls">
+                        <span className="timer-display">{formatDuration(restTimer)}</span>
+                        <button onClick={handleAddRestTime}>+15s</button>
+                        <button onClick={handleCancelRestTimer} className="timer-cancel-btn" aria-label="Annulla timer">
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                ) : (
+                    <div className="rest-timer-starter">
+                        <button className="btn-secondary" onClick={() => setIsTimerSetupVisible(true)}>
+                            <span className="material-symbols-outlined">hourglass_top</span>
+                            Inizia Riposo
+                        </button>
+                    </div>
+                )}
             </div>
+
+            {isTimerSetupVisible && (
+                <div className="timer-setup-overlay" onClick={() => setIsTimerSetupVisible(false)}>
+                    <div className="timer-setup-content" onClick={(e) => e.stopPropagation()}>
+                        <h3>Imposta Timer Riposo</h3>
+                        <div className="timer-presets">
+                            <button onClick={() => startRestTimer(60)}>1:00</button>
+                            <button onClick={() => startRestTimer(90)}>1:30</button>
+                            <button onClick={() => startRestTimer(120)}>2:00</button>
+                            <button onClick={() => startRestTimer(180)}>3:00</button>
+                        </div>
+                        <div className="custom-timer-setup">
+                            <label htmlFor="custom-rest-time">Tempo personalizzato (secondi):</label>
+                            <NumberInput 
+                                value={customRestTime}
+                                onChange={setCustomRestTime}
+                                step={15}
+                                min={0}
+                            />
+                        </div>
+                        <div className="timer-setup-actions">
+                            <button className="btn-secondary" onClick={() => setIsTimerSetupVisible(false)}>Annulla</button>
+                            <button className="btn-primary" onClick={handleStartCustomTimer}>Inizia</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

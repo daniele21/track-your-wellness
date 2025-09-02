@@ -1,10 +1,9 @@
-const CACHE_NAME = 'diario-ai-cache-v2';
+const CACHE_NAME = 'diario-ai-cache-v5';
 // Cache the essential app shell files. Other assets will be cached on demand.
 const APP_SHELL_URLS = [
-    '/',
-    'index.html',
-    'index.css',
-    'index.tsx',
+    './index.html',
+    './index.css',
+    './manifest.json'
 ];
 
 // On install, cache the app shell

@@ -1,16 +1,19 @@
+
 import React, { useState } from 'react';
 import { RoutineImportModal } from '../components/RoutineImportModal';
 import { WorkoutRoutine, WorkoutSession } from '../types/index';
-import { generateUniqueId, formatDuration } from '../utils/helpers';
+import { generateUniqueId, formatDuration } from '../types/utils/helpers';
 
 interface AllenamentoViewProps {
     routines: WorkoutRoutine[];
     history: WorkoutSession[];
     onSaveRoutines: (routines: WorkoutRoutine[]) => void;
     onStartWorkout: (routine: WorkoutRoutine) => void;
+    onEditSession: (session: WorkoutSession) => void;
+    onDeleteSession: (sessionId: string) => void;
 }
 
-export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, history, onSaveRoutines, onStartWorkout }) => {
+export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, history, onSaveRoutines, onStartWorkout, onEditSession, onDeleteSession }) => {
     const [tab, setTab] = useState<'schede' | 'storico'>('schede');
     const [isImportModalOpen, setImportModalOpen] = useState(false);
 
@@ -68,13 +71,23 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                 <div>
                     {history.length > 0 ? [...history].reverse().map(session => (
                         <div className="card" key={session.id}>
-                            <h4>{session.routineName}</h4>
-                            <p className="routine-info">
-                                {new Date(session.date).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })}
-                            </p>
-                            <div className="session-duration">
-                               <span className="material-symbols-outlined">timer</span>
-                               <span>{formatDuration(session.duration)}</span>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div>
+                                    <h4>{session.routineName}</h4>
+                                    <p className="routine-info">
+                                        {new Date(session.date).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })}
+                                    </p>
+                                    <div className="session-duration">
+                                       <span className="material-symbols-outlined">timer</span>
+                                       <span>{formatDuration(session.duration)}</span>
+                                    </div>
+                                </div>
+                                <div className="session-history-card-actions">
+                                    <button className="btn-secondary" style={{padding: '6px 12px'}} onClick={() => onEditSession(session)}>Modifica</button>
+                                    <button className="btn-danger-icon" onClick={() => onDeleteSession(session.id)} aria-label={`Elimina sessione del ${session.date}`}>
+                                        <span className="material-symbols-outlined">delete</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )) : (

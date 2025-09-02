@@ -5,7 +5,7 @@ import { MacroBar } from '../components/MacroBar';
 // Fix: Import MEAL_TYPES to iterate over known meal keys safely.
 import { DailyLog, DailyTotals, NutritionGoals, View, WorkoutSession, MEAL_TYPES, BodyMeasurement } from '../types/index';
 import { getDailyTipWithGemini } from '../services/geminiService';
-import { formatDate } from '../utils/helpers';
+import { formatDate } from '../types/utils/helpers';
 
 interface HomeViewProps {
     dailyLog: DailyLog | null;

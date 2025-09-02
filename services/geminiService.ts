@@ -1,6 +1,7 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { FoodItem, WorkoutRoutine, NutritionGoals, ExerciseDefinition } from '../types/index';
-import { logError } from './loggingService';
+import { logError } from '../views/loggingService';
 
 const API_KEY = process.env.API_KEY;
 const ai = new GoogleGenAI({ apiKey: API_KEY });

@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { formatDate, getDisplayDate } from '../utils/helpers';
+import { formatDate, getDisplayDate } from '../types/utils/helpers';
 
 export const DateNavigator: React.FC<{ currentDate: Date; setCurrentDate: (date: Date) => void; }> = ({ currentDate, setCurrentDate }) => {
     const isToday = formatDate(currentDate) === formatDate(new Date());

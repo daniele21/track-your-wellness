@@ -1,5 +1,5 @@
 import { dbService } from './dbService';
-import { DailyLog, NutritionGoals, WorkoutRoutine, WorkoutSession, BodyMeasurement, Theme, View, DEFAULT_GOALS } from '../types';
+import { DailyLog, NutritionGoals, WorkoutRoutine, WorkoutSession, BodyMeasurement, Theme, View, DEFAULT_GOALS } from '../types/index';
 
 const KEYS = {
     THEME: 'theme',
@@ -118,6 +118,8 @@ export const dataService = {
     deleteWorkoutRoutine: (id: string) => dbService.delete(STORES.WORKOUT_ROUTINES, id),
     
     addWorkoutToHistory: (session: WorkoutSession) => dbService.set(STORES.WORKOUT_HISTORY, session),
+    updateWorkoutInHistory: (session: WorkoutSession) => dbService.set(STORES.WORKOUT_HISTORY, session),
+    deleteWorkoutFromHistory: (id: string) => dbService.delete(STORES.WORKOUT_HISTORY, id),
     
     saveBodyMeasurement: (measurement: BodyMeasurement) => dbService.set(STORES.BODY_MEASUREMENTS, measurement),
     deleteBodyMeasurement: (date: string) => dbService.delete(STORES.BODY_MEASUREMENTS, date),

@@ -1,8 +1,9 @@
+
 import React, { useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { DailyLog, Theme, MEAL_TYPES, BodyMeasurement } from '../types/index';
-import { formatDate } from '../utils/helpers';
+import { formatDate } from '../types/utils/helpers';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 

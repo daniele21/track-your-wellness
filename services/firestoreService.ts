@@ -1,6 +1,8 @@
-import { db, firebase } from './firebase';
+
+
+import { db, firebase } from '../types/utils/firebase';
 import 'firebase/compat/firestore';
-import { DailyLog, NutritionGoals, WorkoutRoutine, WorkoutSession, DEFAULT_GOALS } from '../types';
+import { DailyLog, NutritionGoals, WorkoutRoutine, WorkoutSession, DEFAULT_GOALS } from '../types/index';
 
 // Type for the entire user data document
 interface UserData {

@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { Modal } from './Modal';
 import { BodyMeasurement } from '../types/index';
-import { formatDate } from '../utils/helpers';
+import { formatDate } from '../types/utils/helpers';
 
 interface AddMeasurementModalProps {
     isOpen: boolean;

@@ -7,9 +7,10 @@ interface PastiViewProps {
     setCurrentDate: (date: Date) => void;
     onAddMealClick: () => void;
     onDeleteFood: (mealType: MealType, itemIndex: number) => void;
+    onEditFood: (mealType: MealType, itemIndex: number) => void;
 }
 
-export const PastiView: React.FC<PastiViewProps> = ({ dailyLog, currentDate, setCurrentDate, onAddMealClick, onDeleteFood }) => {
+export const PastiView: React.FC<PastiViewProps> = ({ dailyLog, currentDate, setCurrentDate, onAddMealClick, onDeleteFood, onEditFood }) => {
 
     return (
         <>
@@ -28,8 +29,11 @@ export const PastiView: React.FC<PastiViewProps> = ({ dailyLog, currentDate, set
                                 {mealItems.map((item, index) => (
                                     <li key={index} className="food-item">
                                         <span className="name">{item.name}</span>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <div className="food-item-actions">
                                             <span className="kcal">{Math.round(item.kcal)} kcal</span>
+                                             <button onClick={() => onEditFood(mealType, index)} className="btn-secondary-icon" aria-label={`Modifica ${item.name}`}>
+                                                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>edit</span>
+                                            </button>
                                              <button onClick={() => onDeleteFood(mealType, index)} className="btn-danger-icon" aria-label={`Rimuovi ${item.name}`}>
                                                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete</span>
                                             </button>

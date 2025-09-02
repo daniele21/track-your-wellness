@@ -2,27 +2,21 @@
   "name": "Diario Alimentare AI",
   "short_name": "Diario AI",
   "description": "Un'app intelligente per monitorare la tua dieta usando Gemini per analizzare i pasti.",
-  "start_url": ".",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#f7f9fc",
   "theme_color": "#2196F3",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "icon-192x192.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDUiIGZpbGw9IiMyMTk2RjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIyMCIgZmlsbD0iI2Y3ZjlmYyIvPjwvc3ZnPg==",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/svg+xml"
     },
     {
-      "src": "icon-512x512.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDUiIGZpbGw9IiMyMTk2RjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIyMCIgZmlsbD0iI2Y3ZjlmYyIvPjwvc3ZnPg==",
       "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-        "src": "maskable_icon.png",
-        "sizes": "196x196",
-        "type": "image/png",
-        "purpose": "any maskable"
+      "type": "image/svg+xml"
     }
   ]
 }

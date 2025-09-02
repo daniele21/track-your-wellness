@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { logError, logInfo } from './services/loggingService';
+import { logError, logInfo } from './views/loggingService';
 import { dataService } from './services/dataService';
 
-import { formatDate, generateUniqueId, parseTargetReps } from './utils/helpers';
+import { formatDate, generateUniqueId, parseTargetReps } from './types/utils/helpers';
 import { View, Theme, DailyLog, NutritionGoals, WorkoutRoutine, WorkoutSession, FoodItem, MealType, DEFAULT_GOALS, LoggedSet, BodyMeasurement } from './types/index';
 
 import { Header } from './components/Header';
@@ -11,6 +12,7 @@ import { DateNavigator } from './components/DateNavigator';
 import { BottomNav } from './components/BottomNav';
 import { AddMealModal } from './components/AddMealModal';
 import { AddMeasurementModal } from './components/AddMeasurementModal';
+import { EditFoodItemModal } from './components/EditFoodItemModal';
 
 import { HomeView } from './views/HomeView';
 import { PastiView } from './views/PastiView';
@@ -18,6 +20,7 @@ import { AllenamentoView } from './views/AllenamentoView';
 import { StatsView } from './views/StatsView';
 import { ProfileView } from './views/ProfileView';
 import { ActiveWorkoutSession } from './views/ActiveWorkoutSession';
+import { EditWorkoutSessionView } from './views/EditWorkoutSessionView';
 
 const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -30,11 +33,14 @@ const App: React.FC = () => {
     const [workoutRoutines, setWorkoutRoutines] = useState<WorkoutRoutine[]>([]);
     const [workoutHistory, setWorkoutHistory] = useState<WorkoutSession[]>([]);
     const [activeSession, setActiveSession] = useState<WorkoutSession | null>(null);
+    const [editingSession, setEditingSession] = useState<WorkoutSession | null>(null);
     const [bodyMeasurements, setBodyMeasurements] = useState<BodyMeasurement[]>([]);
     
     const [currentDate, setCurrentDate] = useState(new Date());
     const [isAddMealModalOpen, setAddMealModalOpen] = useState(false);
     const [measurementModalState, setMeasurementModalState] = useState<{ measurement?: BodyMeasurement, date: string } | null>(null);
+    const [editingFoodItem, setEditingFoodItem] = useState<{ mealType: MealType; itemIndex: number; item: FoodItem } | null>(null);
+
 
     // --- Data Loading and Migration Effect ---
     useEffect(() => {
@@ -110,6 +116,33 @@ const App: React.FC = () => {
         setDailyLogs(newDailyLogs);
         logInfo('Food item deleted.', { mealType, itemIndex });
     };
+    
+    const handleOpenEditFoodModal = (mealType: MealType, itemIndex: number) => {
+        const dateKey = formatDate(currentDate);
+        const item = dailyLogs[dateKey]?.[mealType]?.[itemIndex];
+        if (item) {
+            setEditingFoodItem({ mealType, itemIndex, item });
+        }
+    };
+
+    const handleCloseEditFoodModal = () => setEditingFoodItem(null);
+
+    const handleUpdateFoodItem = async (updatedItem: FoodItem) => {
+        if (!editingFoodItem) return;
+        const { mealType, itemIndex } = editingFoodItem;
+        const dateKey = formatDate(currentDate);
+        const logForDate = { ...dailyLogs[dateKey] };
+        
+        if (!logForDate?.[mealType]) return;
+
+        const newMealItems = [...logForDate[mealType]!];
+        newMealItems[itemIndex] = updatedItem;
+        const newLog = { ...logForDate, [mealType]: newMealItems };
+
+        await dataService.saveDailyLog(newLog, dateKey);
+        setDailyLogs(prev => ({ ...prev, [dateKey]: newLog }));
+        handleCloseEditFoodModal();
+    };
 
     const handleUpdateGoals = async (newGoals: NutritionGoals) => {
         await dataService.saveGoals(newGoals);
@@ -181,6 +214,24 @@ const App: React.FC = () => {
         logInfo('Workout finished.', { routineName: session.routineName, duration: session.duration });
     };
     
+    const handleStartEditWorkout = (session: WorkoutSession) => {
+        setEditingSession(session);
+    };
+    const handleCancelEditWorkout = () => {
+        setEditingSession(null);
+    };
+    const handleDeleteWorkout = async (sessionId: string) => {
+        if (window.confirm("Sei sicuro di voler eliminare questa sessione di allenamento?")) {
+            await dataService.deleteWorkoutFromHistory(sessionId);
+            setWorkoutHistory(prev => prev.filter(s => s.id !== sessionId));
+        }
+    };
+    const handleSaveWorkout = async (updatedSession: WorkoutSession) => {
+        await dataService.updateWorkoutInHistory(updatedSession);
+        setWorkoutHistory(prev => prev.map(s => s.id === updatedSession.id ? updatedSession : s));
+        setEditingSession(null);
+    };
+
     const handleAddMeasurement = async (measurement: Omit<BodyMeasurement, 'date'>, date: string) => {
         const dateKey = date;
         const newMeasurementEntry: BodyMeasurement = { ...measurement, date: dateKey };
@@ -240,6 +291,7 @@ const App: React.FC = () => {
                             setCurrentDate={setCurrentDate} 
                             onAddMealClick={() => setAddMealModalOpen(true)}
                             onDeleteFood={handleDeleteFood}
+                            onEditFood={handleOpenEditFoodModal}
                         />;
             case 'allenamento':
                  return <AllenamentoView 
@@ -247,6 +299,8 @@ const App: React.FC = () => {
                             history={workoutHistory} 
                             onSaveRoutines={handleSaveRoutines}
                             onStartWorkout={handleStartWorkout}
+                            onEditSession={handleStartEditWorkout}
+                            onDeleteSession={handleDeleteWorkout}
                         />;
             case 'misure':
             case 'analisi':
@@ -310,6 +364,10 @@ const App: React.FC = () => {
         return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#1a202c', color: '#e2e8f0' }}>Caricamento...</div>;
     }
 
+    if (editingSession) {
+        return <EditWorkoutSessionView session={editingSession} onSave={handleSaveWorkout} onCancel={handleCancelEditWorkout} />;
+    }
+
     if (activeSession) {
         return (
             <ActiveWorkoutSession 
@@ -338,6 +396,12 @@ const App: React.FC = () => {
                 isOpen={isAddMealModalOpen}
                 onClose={() => setAddMealModalOpen(false)}
                 onAddMeal={handleAddMeal}
+            />
+            <EditFoodItemModal
+                isOpen={!!editingFoodItem}
+                onClose={handleCloseEditFoodModal}
+                onSave={handleUpdateFoodItem}
+                foodItem={editingFoodItem?.item ?? null}
             />
             <AddMeasurementModal 
                 isOpen={!!measurementModalState}
