@@ -47,8 +47,54 @@ export const PastiView: React.FC<PastiViewProps> = ({
         }
     };
 
+    // Calculate daily totals
+    const totals = { kcal: 0, carbs: 0, protein: 0, fats: 0, fiber: 0 };
+    if (dailyLog) {
+        Object.values(dailyLog).forEach(items => {
+            items?.forEach(item => {
+                totals.kcal += item.kcal;
+                totals.carbs += item.carbs;
+                totals.protein += item.protein;
+                totals.fats += item.fats;
+                totals.fiber += item.fiber;
+            });
+        });
+    }
+
     return (
         <>
+            {/* Daily Recap Section */}
+            <div className="card daily-recap" style={{ marginBottom: '24px', padding: '24px', borderRadius: '18px', background: 'var(--surface-color)', boxShadow: '0 4px 16px rgba(59,130,246,0.08)', border: '2px solid var(--primary-gradient-start)' }}>
+                <h3 style={{ margin: '0 0 12px 0', fontWeight: 700, fontSize: '1.3rem', color: 'var(--primary-color)', letterSpacing: '0.5px' }}>
+                    <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '8px', color: 'var(--primary-color)', fontSize: '28px' }}>local_fire_department</span>
+                    Riepilogo Giornaliero
+                </h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flexWrap: 'wrap', marginTop: '8px' }}>
+                    <div style={{ fontWeight: 700, fontSize: '1.2rem', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="material-symbols-outlined" style={{ color: 'var(--primary-color)', fontSize: '22px' }}>local_fire_department</span>
+                        {Math.round(totals.kcal)} kcal
+                    </div>
+                    <div style={{ display: 'flex', gap: '18px', alignItems: 'center', fontSize: '1.05rem', fontWeight: 600 }}>
+                        <span style={{ color: 'var(--carbs-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--carbs-color)' }}>grain</span>
+                            {Math.round(totals.carbs)}g Carb
+                        </span>
+                        <span style={{ color: 'var(--protein-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--protein-color)' }}>egg</span>
+                            {Math.round(totals.protein)}g Prot
+                        </span>
+                        <span style={{ color: 'var(--fats-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--fats-color)' }}>restaurant</span>
+                            {Math.round(totals.fats)}g Grassi
+                        </span>
+                        <span style={{ color: 'var(--fiber-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--fiber-color)' }}>eco</span>
+                            {Math.round(totals.fiber)}g Fibra
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             {MEAL_TYPES.map(mealType => {
                 const mealItems = dailyLog?.[mealType] ?? [];
                 const mealKcal = mealItems.reduce((sum, item) => sum + item.kcal, 0);

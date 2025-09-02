@@ -8,6 +8,31 @@ interface UserProfileProps {
 export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [cachedPhoto, setCachedPhoto] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const cacheKey = `profile_img_${user.uid}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      setCachedPhoto(cached);
+    } else if (user.photoURL) {
+      fetch(user.photoURL)
+        .then(res => res.blob())
+        .then(blob => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            if (reader.result) {
+              localStorage.setItem(cacheKey, reader.result as string);
+              setCachedPhoto(reader.result as string);
+            }
+          };
+          reader.readAsDataURL(blob);
+        })
+        .catch(() => {
+          setCachedPhoto(null);
+        });
+    }
+  }, [user.photoURL, user.uid]);
 
   const handleSignOut = async () => {
     try {
@@ -27,7 +52,13 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         onClick={() => setShowDropdown(!showDropdown)}
         className="user-profile-button"
       >
-        {user.photoURL ? (
+        {cachedPhoto ? (
+          <img
+            src={cachedPhoto}
+            alt={user.displayName || 'User'}
+            className="user-profile-avatar"
+          />
+        ) : user.photoURL ? (
           <img
             src={user.photoURL}
             alt={user.displayName || 'User'}
