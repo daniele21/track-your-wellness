@@ -16,13 +16,13 @@ This guide shows you how to deploy your Track Your Wellness app securely without
 ```bash
 # Add your environment variables securely
 vercel env add GEMINI_API_KEY production
-# When prompted, paste your API key: AIzaSyCM_F-iLTCYI_pZReSFMgeDqC-HQI8C1ck
+# When prompted, paste your actual API key
 ```
 
 #### Alternative via Dashboard:
 1. Go to your project dashboard on vercel.com
 2. Navigate to Settings → Environment Variables
-3. Add: `GEMINI_API_KEY` = `AIzaSyCM_F-iLTCYI_pZReSFMgeDqC-HQI8C1ck`
+3. Add: `GEMINI_API_KEY` = `[your-actual-api-key]`
 4. Redeploy your app
 
 ### 2. Netlify
@@ -36,13 +36,13 @@ vercel env add GEMINI_API_KEY production
 #### Environment Variables:
 ```bash
 # Via CLI
-netlify env:set GEMINI_API_KEY AIzaSyCM_F-iLTCYI_pZReSFMgeDqC-HQI8C1ck
+netlify env:set GEMINI_API_KEY [your-actual-api-key]
 ```
 
 #### Alternative via Dashboard:
 1. Go to your site dashboard on netlify.com
 2. Navigate to Site settings → Environment variables
-3. Add: `GEMINI_API_KEY` = `AIzaSyCM_F-iLTCYI_pZReSFMgeDqC-HQI8C1ck`
+3. Add: `GEMINI_API_KEY` = `[your-actual-api-key]`
 4. Trigger a new deploy
 
 ### 3. GitHub Pages (Static Only)
@@ -128,7 +128,7 @@ grep -r "AIza" . --exclude-dir=node_modules --exclude-dir=.git || echo "No API k
 If your API key is accidentally exposed:
 1. **Immediately** regenerate the key in Google Cloud Console
 2. Update the key in your deployment platform
-3. Check git history: `git log -p --all -S "AIzaSyC"`
+3. Check git history: `git log -p --all -S "YOUR_API_KEY_PREFIX"`
 4. If found in git history, consider cleaning it: `git filter-branch` or create a new repo
 5. Monitor API usage for the next 24-48 hours
 
