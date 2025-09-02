@@ -4,6 +4,13 @@ import { FoodItem, WorkoutRoutine, NutritionGoals, ExerciseDefinition } from '..
 import { logError } from '../views/loggingService';
 
 const API_KEY = process.env.API_KEY;
+
+// Validate API key is present
+if (!API_KEY) {
+    console.error('GEMINI_API_KEY is not configured. Please add it to your .env.local file.');
+    throw new Error('Gemini API key is required. Please check your environment configuration.');
+}
+
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export const analyzeMealWithGemini = async (description: string): Promise<FoodItem[]> => {
