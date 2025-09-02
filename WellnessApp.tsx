@@ -291,6 +291,9 @@ export const App: React.FC<WellnessAppProps> = ({ user }) => {
             case 'pasti':
                 return <PastiView 
                             dailyLog={currentLog} 
+                            dailyLogs={dailyLogs}
+                            workoutSessions={workoutHistory}
+                            goals={goals}
                             currentDate={currentDate} 
                             setCurrentDate={setCurrentDate} 
                             onAddMealClick={() => setAddMealModalOpen(true)}
@@ -301,6 +304,7 @@ export const App: React.FC<WellnessAppProps> = ({ user }) => {
                  return <AllenamentoView 
                             routines={workoutRoutines} 
                             history={workoutHistory} 
+                            goals={goals}
                             onSaveRoutines={handleSaveRoutines}
                             onStartWorkout={handleStartWorkout}
                             onEditSession={handleStartEditWorkout}
