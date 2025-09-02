@@ -27,6 +27,7 @@ export const PastiView: React.FC<PastiViewProps> = ({
 }) => {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analysisResult, setAnalysisResult] = useState('');
+    const [selectedFood, setSelectedFood] = useState<{ item: any, mealType: MealType } | null>(null);
 
     const handleAnalyzeMealPlan = async () => {
         if (Object.keys(dailyLogs).length === 0) {
@@ -109,7 +110,7 @@ export const PastiView: React.FC<PastiViewProps> = ({
                             <ul className="food-list">
                                 {mealItems.map((item, index) => (
                                     <li key={index} className="food-item">
-                                        <span className="name">{item.name}</span>
+                                        <span className="name" style={{ cursor: 'pointer' }} onClick={() => setSelectedFood({ item, mealType })}>{item.name}</span>
                                         <div className="food-item-actions">
                                             <span className="kcal">{Math.round(item.kcal)} kcal</span>
                                              <button onClick={() => onEditFood(mealType, index)} className="btn-secondary-icon" aria-label={`Modifica ${item.name}`}>
@@ -145,6 +146,45 @@ export const PastiView: React.FC<PastiViewProps> = ({
                 <div className="card" style={{marginBottom: '80px'}}>
                     <h4>Valutazione del Piano Alimentare</h4>
                     <div style={{whiteSpace: 'pre-wrap', lineHeight: '1.6'}}>{analysisResult}</div>
+                </div>
+            )}
+
+                        <button className="fab" onClick={onAddMealClick} aria-label="Aggiungi pasto">
+                <span className="material-symbols-outlined">add</span>
+            </button>
+            {/* Dialog nutrizionale cibo */}
+            {selectedFood && (
+                <div className="modal-overlay" style={{ position: 'fixed', zIndex: 9999, top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="card" style={{ minWidth: '320px', maxWidth: '90vw', padding: '32px', borderRadius: '18px', boxShadow: '0 4px 24px rgba(59,130,246,0.12)', position: 'relative' }}>
+                        <button className="btn-secondary" style={{ position: 'absolute', top: 18, right: 18 }} onClick={() => setSelectedFood(null)}>
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                        <h3 style={{ marginBottom: '18px', fontWeight: 700, fontSize: '1.2rem', color: 'var(--primary-color)' }}>{selectedFood.item.name}</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '1.08rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <span className="material-symbols-outlined" style={{ color: 'var(--primary-color)', fontSize: '22px' }}>local_fire_department</span>
+                                <span style={{ fontWeight: 600 }}>{Math.round(selectedFood.item.kcal)} kcal</span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '18px', alignItems: 'center', fontWeight: 500 }}>
+                                <span style={{ color: 'var(--carbs-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--carbs-color)' }}>grain</span>
+                                    {Math.round(selectedFood.item.carbs)}g Carb
+                                </span>
+                                <span style={{ color: 'var(--protein-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--protein-color)' }}>egg</span>
+                                    {Math.round(selectedFood.item.protein)}g Prot
+                                </span>
+                                <span style={{ color: 'var(--fats-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--fats-color)' }}>restaurant</span>
+                                    {Math.round(selectedFood.item.fats)}g Grassi
+                                </span>
+                                <span style={{ color: 'var(--fiber-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--fiber-color)' }}>eco</span>
+                                    {Math.round(selectedFood.item.fiber)}g Fibra
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
 

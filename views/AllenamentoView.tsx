@@ -105,10 +105,10 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                                 <div className="routine-info">
                                     <div className="routine-title-section" style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'nowrap' }}>
                                         <h4 style={{ margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: '0 1 auto' }}>{routine.name}</h4>
-                                        <div className="routine-status-badge" style={{ flexShrink: 0 }}>
+                                        {/* <div className="routine-status-badge" style={{ flexShrink: 0 }}>
                                             <span className="material-symbols-outlined">verified</span>
                                             Importata
-                                        </div>
+                                        </div> */}
                                     </div>
                                     {routine.description && (
                                         <p className="routine-description">{routine.description}</p>
