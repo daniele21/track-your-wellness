@@ -31,6 +31,38 @@ View your app in AI Studio: https://ai.studio/apps/drive/1O-3Rq2Yg0OB1hW5gOz2Sok
    npm run dev
    ```
 
+## Deployment
+
+### Firebase Hosting (Recommended)
+
+1. **First-time setup:**
+   ```bash
+   # Install Firebase CLI
+   npm install -g firebase-tools
+   
+   # Login to Firebase
+   firebase login
+   
+   # Initialize Firebase (choose Hosting)
+   firebase init hosting
+   ```
+
+2. **Deploy your app:**
+   ```bash
+   # Quick deployment
+   npm run deploy:firebase
+   
+   # Or manual steps
+   npm run build:prod
+   firebase deploy --only hosting
+   ```
+
+3. **Secure your API key:**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Navigate to APIs & Services → Credentials  
+   - Edit your Gemini API key
+   - Add your Firebase domain to HTTP referrers
+
 ## Security
 
 This application prioritizes user privacy and security:

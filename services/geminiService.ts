@@ -2,6 +2,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { FoodItem, WorkoutRoutine, NutritionGoals, ExerciseDefinition } from '../types/index';
 import { logError } from '../views/loggingService';
+import { authService } from './authService';
 
 const API_KEY = process.env.API_KEY;
 
@@ -13,7 +14,21 @@ if (!API_KEY) {
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
+// Authentication check wrapper
+const requireAuth = async (): Promise<void> => {
+    if (!authService.isAuthenticated()) {
+        throw new Error('Authentication required. Please sign in to use AI features.');
+    }
+    
+    if (!authService.isAuthorized()) {
+        throw new Error('Access denied. Your account is not authorized to use AI features.');
+    }
+};
+
 export const analyzeMealWithGemini = async (description: string): Promise<FoodItem[]> => {
+    // Check authentication before making API call
+    await requireAuth();
+    
     const model = "gemini-2.5-flash";
     const schema = {
         type: Type.ARRAY,
@@ -74,6 +89,9 @@ export const analyzeMealWithGemini = async (description: string): Promise<FoodIt
 };
 
 export const analyzeRoutinesWithGemini = async (text: string): Promise<Omit<WorkoutRoutine, 'id'>[]> => {
+    // Check authentication before making API call
+    await requireAuth();
+    
     const model = "gemini-2.5-flash";
     const schema = {
         type: Type.ARRAY,
@@ -148,6 +166,9 @@ export const analyzeRoutinesWithGemini = async (text: string): Promise<Omit<Work
 };
 
 export const getDailyTipWithGemini = async (goals: NutritionGoals): Promise<string> => {
+    // Check authentication before making API call
+    await requireAuth();
+    
     const model = "gemini-2.5-flash";
     const goalsString = (Object.keys(goals) as Array<keyof NutritionGoals>)
         .filter(key => goals[key].enabled)
@@ -167,6 +188,9 @@ export const getDailyTipWithGemini = async (goals: NutritionGoals): Promise<stri
 };
 
 export const generateShoppingListWithGemini = async (items: FoodItem[]): Promise<string> => {
+    // Check authentication before making API call
+    await requireAuth();
+    
     const model = "gemini-2.5-flash";
     const itemsString = items.map(item => item.name).join(', ');
     

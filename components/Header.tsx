@@ -1,6 +1,15 @@
 import React from 'react';
+import { UserProfile } from './UserProfile';
+import { AuthUser } from '../services/authService';
 
-export const Header: React.FC<{ title: string | React.ReactNode; actions?: React.ReactNode; onLogoClick?: () => void; }> = ({ title, actions, onLogoClick }) => (
+interface HeaderProps {
+  title: string | React.ReactNode;
+  actions?: React.ReactNode;
+  onLogoClick?: () => void;
+  user?: AuthUser;
+}
+
+export const Header: React.FC<HeaderProps> = ({ title, actions, onLogoClick, user }) => (
     <header className="header">
         <div className="header-logo">
             {onLogoClick ? (
@@ -13,7 +22,7 @@ export const Header: React.FC<{ title: string | React.ReactNode; actions?: React
         </div>
         <div className="header-title-container">{typeof title === 'string' ? <h1 className="view-title">{title}</h1> : title}</div>
         <div className="header-actions">
-             {actions ? actions : <div className="actions-placeholder"></div>}
+             {actions ? actions : (user ? <UserProfile user={user} /> : <div className="actions-placeholder"></div>)}
         </div>
     </header>
 );
