@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { DateNavigator } from '../components/DateNavigator';
 import { CalorieRing } from '../components/CalorieRing';
 import { MacroBar } from '../components/MacroBar';
-// Fix: Import MEAL_TYPES to iterate over known meal keys safely.
+// Import MEAL_TYPES to iterate over known meal keys safely.
 import { DailyLog, DailyTotals, NutritionGoals, View, WorkoutSession, MEAL_TYPES, BodyMeasurement } from '../types/index';
 import { getDailyTipWithGemini } from '../services/geminiService';
 import { formatDate } from '../types/utils/helpers';
@@ -25,9 +25,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ dailyLog, goals, currentDate
     const totals = useMemo<DailyTotals>(() => {
         const t: DailyTotals = { kcal: 0, carbs: 0, protein: 0, fats: 0, fiber: 0 };
         if (!dailyLog) return t;
-        // Fix: Replaced `for (const meal of Object.values(dailyLog))` with an iteration over `MEAL_TYPES`
+        // Replaced `for (const meal of Object.values(dailyLog))` with an iteration over `MEAL_TYPES`
         // to avoid potential issues with Object.values support in the TS/JS environment.
-        // This resolves the "must have a '[Symbol.iterator]()' method" error.
         for (const mealType of MEAL_TYPES) {
             const meal = dailyLog[mealType];
             if (meal) {

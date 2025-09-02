@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// FIX: Import MEAL_TYPES to iterate over daily logs safely.
+// Import MEAL_TYPES to iterate over daily logs safely.
 import { DailyLog, NutritionGoals, Theme, FoodItem, MEAL_TYPES } from '../types/index';
 import { generateShoppingListWithGemini } from '../services/geminiService';
 
@@ -29,7 +29,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ goals, onUpdateGoals, 
     };
     
     const handleGenerateShoppingList = async () => {
-        // FIX: Replaced a problematic loop over Object.values() with a safer iteration
+        // Replaced a problematic loop over Object.values() with a safer iteration
         // over known meal types to avoid type errors.
         const allItems: FoodItem[] = [];
         if (dailyLog) {
