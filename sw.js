@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diario-ai-cache-v5';
+const CACHE_NAME = 'track-your-wellness-cache-v7';
 // Cache the essential app shell files. Other assets will be cached on demand.
 const APP_SHELL_URLS = [
     './index.html',

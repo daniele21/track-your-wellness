@@ -340,7 +340,7 @@ export const App: React.FC<WellnessAppProps> = ({ user }) => {
     };
     
     const getHeaderContent = () => {
-        let title: string | React.ReactNode = 'Diario AI';
+        let title: string | React.ReactNode = 'Track Your Wellness';
         let actions: React.ReactNode | null = null;
     
         switch (view) {

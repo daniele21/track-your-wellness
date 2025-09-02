@@ -1,20 +1,20 @@
 {
-  "name": "Diario Alimentare AI",
-  "short_name": "Diario AI",
-  "description": "Un'app intelligente per monitorare la tua dieta usando Gemini per analizzare i pasti.",
+  "name": "Track Your Wellness",
+  "short_name": "Track Your Wellness",
+  "description": "Un'app intelligente per monitorarti",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#f7f9fc",
-  "theme_color": "#2196F3",
+  "background_color": "#f8fafc",
+  "theme_color": "#667eea",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDUiIGZpbGw9IiMyMTk2RjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIyMCIgZmlsbD0iI2Y3ZjlmYyIvPjwvc3ZnPg==",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTk2IDI4aDY0bDY0IDQ0djg4bC02NCA0NEg5NkwzMiAxNjBWNzJMOTYgMjhaIiBzdHJva2U9IiM2NjdlZWEiIHN0cm9rZS13aWR0aD0iMTYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNjAgMTMwIEg5MCBMMTA2IDk0IEwxMTggMTQ2IEwxMzIgMTE4IEwxNDIgMTMwIEgxNjQiIHN0cm9rZT0iIzY2N2VlYSIgc3Ryb2tlLXdpZHRoPSIxMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+PHJlY3QgeD0iMTY4IiB5PSIxMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0MCIgcng9IjMiIGZpbGw9IiM2NjdlZWEiLz48cmVjdCB4PSIxODQiIHk9IjEwMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjUwIiByeD0iMyIgZmlsbD0iIzY2N2VlYSIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjIwMCIgeT0iODgiIHdpZHRoPSIxMiIgaGVpZ2h0PSI2MiIgcng9IjMiIGZpbGw9IiM2NjdlZWEiIG9wYWNpdHk9IjAuNzAiLz48L3N2Zz4=",
       "sizes": "192x192",
       "type": "image/svg+xml"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDUiIGZpbGw9IiMyMTk2RjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIyMCIgZmlsbD0iI2Y3ZjlmYyIvPjwvc3ZnPg==",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTk2IDI4aDY0bDY0IDQ0djg4bC02NCA0NEg5NkwzMiAxNjBWNzJMOTYgMjhaIiBzdHJva2U9IiM2NjdlZWEiIHN0cm9rZS13aWR0aD0iMTYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNjAgMTMwIEg5MCBMMTA2IDk0IEwxMTggMTQ2IEwxMzIgMTE4IEwxNDIgMTMwIEgxNjQiIHN0cm9rZT0iIzY2N2VlYSIgc3Ryb2tlLXdpZHRoPSIxMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+PHJlY3QgeD0iMTY4IiB5PSIxMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0MCIgcng9IjMiIGZpbGw9IiM2NjdlZWEiLz48cmVjdCB4PSIxODQiIHk9IjEwMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjUwIiByeD0iMyIgZmlsbD0iIzY2N2VlYSIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjIwMCIgeT0iODgiIHdpZHRoPSIxMiIgaGVpZ2h0PSI2MiIgcng9IjMiIGZpbGw9IiM2NjdlZWEiIG9wYWNpdHk9IjAuNzAiLz48L3N2Zz4=",
       "sizes": "512x512",
       "type": "image/svg+xml"
     }

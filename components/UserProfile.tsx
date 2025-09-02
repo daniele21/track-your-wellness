@@ -22,73 +22,28 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="user-profile-container">
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          border: 'none',
-          borderRadius: '8px',
-          padding: '8px 12px',
-          color: 'white',
-          cursor: 'pointer',
-          transition: 'background 0.2s'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-        }}
+        className="user-profile-button"
       >
         {user.photoURL ? (
           <img
             src={user.photoURL}
             alt={user.displayName || 'User'}
-            style={{
-              width: '24px',
-              height: '24px',
-              borderRadius: '50%',
-              objectFit: 'cover'
-            }}
+            className="user-profile-avatar"
           />
         ) : (
-          <div
-            style={{
-              width: '24px',
-              height: '24px',
-              borderRadius: '50%',
-              background: '#6366f1',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12px',
-              fontWeight: 'bold'
-            }}
-          >
+          <div className="user-profile-avatar-placeholder">
             {(user.displayName || user.email || 'U')[0].toUpperCase()}
           </div>
         )}
-        <span style={{ fontSize: '14px', fontWeight: '500' }}>
-          {user.displayName || user.email?.split('@')[0]}
+        <span className="user-profile-name">
+          {user.displayName || user.email?.split('@')[0] || 'User'}
         </span>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          style={{
-            transform: showDropdown ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s'
-          }}
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>
+        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+          {showDropdown ? 'expand_less' : 'expand_more'}
+        </span>
       </button>
 
       {showDropdown && (

@@ -4,7 +4,7 @@ import { CalorieRing } from '../components/CalorieRing';
 import { MacroBar } from '../components/MacroBar';
 // Import MEAL_TYPES to iterate over known meal keys safely.
 import { DailyLog, DailyTotals, NutritionGoals, View, WorkoutSession, MEAL_TYPES, BodyMeasurement } from '../types/index';
-import { getDailyTipWithGemini } from '../services/geminiService';
+// import { getDailyTipWithGemini } from '../services/geminiService';
 import { formatDate } from '../types/utils/helpers';
 
 interface HomeViewProps {
@@ -20,7 +20,7 @@ interface HomeViewProps {
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({ dailyLog, goals, currentDate, setCurrentDate, setView, onAddMeal, workoutHistory, bodyMeasurements, onOpenMeasurementModal }) => {
-    const [dailyTip, setDailyTip] = useState<string | null>(null);
+    // const [dailyTip, setDailyTip] = useState<string | null>(null);
 
     const totals = useMemo<DailyTotals>(() => {
         const t: DailyTotals = { kcal: 0, carbs: 0, protein: 0, fats: 0, fiber: 0 };
@@ -66,11 +66,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ dailyLog, goals, currentDate
     }, [bodyMeasurements]);
 
     useEffect(() => {
-        if (formatDate(currentDate) === formatDate(new Date())) {
-            getDailyTipWithGemini(goals).then(setDailyTip);
-        } else {
-            setDailyTip(null);
-        }
+        // Disabled daily tip functionality for now
+        // if (formatDate(currentDate) === formatDate(new Date())) {
+        //     getDailyTipWithGemini(goals).then(setDailyTip);
+        // } else {
+        //     setDailyTip(null);
+        // }
     }, [currentDate, goals]);
 
     const enabledMacros = (Object.keys(goals) as Array<keyof NutritionGoals>).filter(key => key !== 'kcal' && key !== 'weeklyWorkouts' && goals[key].enabled);
@@ -83,6 +84,16 @@ export const HomeView: React.FC<HomeViewProps> = ({ dailyLog, goals, currentDate
                 <h2>Riepilogo Giornaliero</h2>
                 <div className="calories-summary">
                     <CalorieRing current={totals.kcal} goal={goals.kcal.enabled ? goals.kcal.value : undefined} />
+                </div>
+            </div>
+
+            <div className="card">
+                <h3>Macronutrienti</h3>
+                <div className={macroGridClass}>
+                    {goals.carbs.enabled && <MacroBar name="Carboidrati" current={totals.carbs} goal={goals.carbs.value} colorClass="carbs" />}
+                    {goals.protein.enabled && <MacroBar name="Proteine" current={totals.protein} goal={goals.protein.value} colorClass="protein" />}
+                    {goals.fats.enabled && <MacroBar name="Grassi" current={totals.fats} goal={goals.fats.value} colorClass="fats" />}
+                    {goals.fiber.enabled && <MacroBar name="Fibre" current={totals.fiber} goal={goals.fiber.value} colorClass="fiber" />}
                 </div>
             </div>
             
@@ -99,6 +110,20 @@ export const HomeView: React.FC<HomeViewProps> = ({ dailyLog, goals, currentDate
                     </button>
                 </div>
             </div>
+
+            {goals.weeklyWorkouts?.enabled && (
+                 <div className="card">
+                    <h3>Allenamento Settimanale</h3>
+                    <div className="weekly-workout-tracker">
+                        {[...Array(weeklyWorkoutStats.goal)].map((_, index) => (
+                            <div key={index} className={`workout-dot ${index < weeklyWorkoutStats.completed ? 'completed' : ''}`}></div>
+                        ))}
+                    </div>
+                    <p className="weekly-workout-summary-text">
+                        {weeklyWorkoutStats.completed} su {weeklyWorkoutStats.goal} allenamenti completati questa settimana.
+                    </p>
+                </div>
+            )}
 
              <div className="card">
                 <h3>Le Mie Misure</h3>
@@ -138,36 +163,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ dailyLog, goals, currentDate
                 </button>
             </div>
             
-            {goals.weeklyWorkouts?.enabled && (
-                 <div className="card">
-                    <h3>Allenamento Settimanale</h3>
-                    <div className="weekly-workout-tracker">
-                        {[...Array(weeklyWorkoutStats.goal)].map((_, index) => (
-                            <div key={index} className={`workout-dot ${index < weeklyWorkoutStats.completed ? 'completed' : ''}`}></div>
-                        ))}
-                    </div>
-                    <p className="weekly-workout-summary-text">
-                        {weeklyWorkoutStats.completed} su {weeklyWorkoutStats.goal} allenamenti completati questa settimana.
-                    </p>
-                </div>
-            )}
-            
-            <div className="card">
-                <h3>Macronutrienti</h3>
-                <div className={macroGridClass}>
-                    {goals.carbs.enabled && <MacroBar name="Carboidrati" current={totals.carbs} goal={goals.carbs.value} colorClass="carbs" />}
-                    {goals.protein.enabled && <MacroBar name="Proteine" current={totals.protein} goal={goals.protein.value} colorClass="protein" />}
-                    {goals.fats.enabled && <MacroBar name="Grassi" current={totals.fats} goal={goals.fats.value} colorClass="fats" />}
-                    {goals.fiber.enabled && <MacroBar name="Fibre" current={totals.fiber} goal={goals.fiber.value} colorClass="fiber" />}
-                </div>
-            </div>
-            
-            {dailyTip && (
+            {/* Disabled daily tip functionality for now */}
+            {/* {dailyTip && (
                 <div className="card">
                     <h3>Consiglio del Giorno</h3>
                     <p>{dailyTip}</p>
                 </div>
-            )}
+            )} */}
         </>
     );
 };

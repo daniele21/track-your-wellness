@@ -1,11 +1,11 @@
 
 import React, { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { DailyLog, Theme, MEAL_TYPES, BodyMeasurement } from '../types/index';
 import { formatDate } from '../types/utils/helpers';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler);
 
 interface StatsViewProps {
     dailyLogs: Record<string, DailyLog>;
@@ -17,6 +17,110 @@ interface StatsViewProps {
 }
 
 export const StatsView: React.FC<StatsViewProps> = ({ dailyLogs, theme, bodyMeasurements, onOpenMeasurementModal, onDeleteMeasurement, activeTab }) => {
+    
+    const macronutrientChartData = useMemo(() => {
+        const isDark = theme === 'dark';
+        const labels: string[] = [];
+        const carbsData: number[] = [];
+        const proteinData: number[] = [];
+        const fatsData: number[] = [];
+        
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            labels.push(d.toLocaleDateString('it-IT', { weekday: 'short' }));
+            const log = dailyLogs[formatDate(d)];
+            if (log) {
+                const totals = { carbs: 0, protein: 0, fats: 0 };
+                for (const mealType of MEAL_TYPES) {
+                    const meal = log[mealType];
+                    if (meal) {
+                        for (const item of meal) {
+                            totals.carbs += item.carbs;
+                            totals.protein += item.protein;
+                            totals.fats += item.fats;
+                        }
+                    }
+                }
+                carbsData.push(totals.carbs);
+                proteinData.push(totals.protein);
+                fatsData.push(totals.fats);
+            } else {
+                carbsData.push(0);
+                proteinData.push(0);
+                fatsData.push(0);
+            }
+        }
+        
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Carboidrati (g)',
+                    data: carbsData,
+                    backgroundColor: isDark ? '#60a5fa' : '#3b82f6',
+                    borderColor: isDark ? '#3b82f6' : '#1d4ed8',
+                    borderWidth: 1,
+                },
+                {
+                    label: 'Proteine (g)',
+                    data: proteinData,
+                    backgroundColor: isDark ? '#f87171' : '#ef4444',
+                    borderColor: isDark ? '#ef4444' : '#dc2626',
+                    borderWidth: 1,
+                },
+                {
+                    label: 'Grassi (g)',
+                    data: fatsData,
+                    backgroundColor: isDark ? '#fbbf24' : '#f59e0b',
+                    borderColor: isDark ? '#f59e0b' : '#d97706',
+                    borderWidth: 1,
+                }
+            ],
+        };
+    }, [dailyLogs, theme]);
+
+    const calorieChartData = useMemo(() => {
+        const isDark = theme === 'dark';
+        const labels: string[] = [];
+        const calorieData: number[] = [];
+        
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            labels.push(d.toLocaleDateString('it-IT', { weekday: 'short' }));
+            const log = dailyLogs[formatDate(d)];
+            if (log) {
+                let totalCalories = 0;
+                for (const mealType of MEAL_TYPES) {
+                    const meal = log[mealType];
+                    if (meal) {
+                        for (const item of meal) {
+                            totalCalories += item.kcal;
+                        }
+                    }
+                }
+                calorieData.push(totalCalories);
+            } else {
+                calorieData.push(0);
+            }
+        }
+        
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Calorie (kcal)',
+                    data: calorieData,
+                    backgroundColor: isDark ? 'rgba(167, 139, 250, 0.8)' : 'rgba(139, 92, 246, 0.8)',
+                    borderColor: isDark ? '#a78bfa' : '#8b5cf6',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                },
+            ],
+        };
+    }, [dailyLogs, theme]);
     
     const nutritionChartData = useMemo(() => {
         const isDark = theme === 'dark';
@@ -196,6 +300,88 @@ export const StatsView: React.FC<StatsViewProps> = ({ dailyLogs, theme, bodyMeas
             {activeTab === 'analisi' && (
                 <div className="stats-view">
                     <div className="card">
+                        <h3>Macronutrienti per Giorno (Ultimi 7 Giorni)</h3>
+                        <div className="line-chart-container">
+                             <Bar 
+                                data={macronutrientChartData} 
+                                options={{
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top' as const,
+                                        },
+                                        tooltip: {
+                                            mode: 'index',
+                                            intersect: false,
+                                        },
+                                    },
+                                    scales: {
+                                        x: {
+                                            stacked: true,
+                                            title: {
+                                                display: true,
+                                                text: 'Giorni della Settimana'
+                                            }
+                                        },
+                                        y: {
+                                            stacked: true,
+                                            title: {
+                                                display: true,
+                                                text: 'Grammi'
+                                            },
+                                            beginAtZero: true
+                                        }
+                                    },
+                                    interaction: {
+                                        mode: 'nearest',
+                                        axis: 'x',
+                                        intersect: false
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="card">
+                        <h3>Calorie per Giorno (Ultimi 7 Giorni)</h3>
+                        <div className="line-chart-container">
+                             <Bar 
+                                data={calorieChartData} 
+                                options={{
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            display: false,
+                                        },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    return `${context.parsed.y} kcal`;
+                                                }
+                                            }
+                                        },
+                                    },
+                                    scales: {
+                                        x: {
+                                            title: {
+                                                display: true,
+                                                text: 'Giorni della Settimana'
+                                            }
+                                        },
+                                        y: {
+                                            title: {
+                                                display: true,
+                                                text: 'Calorie (kcal)'
+                                            },
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="card">
                         <h3>Andamento Misure Corporee</h3>
                         <div className="line-chart-container">
                              <Line 
@@ -208,12 +394,6 @@ export const StatsView: React.FC<StatsViewProps> = ({ dailyLogs, theme, bodyMeas
                                     } 
                                 }}
                             />
-                        </div>
-                    </div>
-                     <div className="card">
-                        <h3>Andamento Nutrizionale (Ultimi 7 Giorni)</h3>
-                        <div className="line-chart-container">
-                             <Line data={nutritionChartData} options={{ responsive: true }} />
                         </div>
                     </div>
                 </div>
