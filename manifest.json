@@ -11,12 +11,29 @@
     {
       "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTk2IDI4aDY0bDY0IDQ0djg4bC02NCA0NEg5NkwzMiAxNjBWNzJMOTYgMjhaIiBzdHJva2U9IiM2NjdlZWEiIHN0cm9rZS13aWR0aD0iMTYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNjAgMTMwIEg5MCBMMTA2IDk0IEwxMTggMTQ2IEwxMzIgMTE4IEwxNDIgMTMwIEgxNjQiIHN0cm9rZT0iIzY2N2VlYSIgc3Ryb2tlLXdpZHRoPSIxMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+PHJlY3QgeD0iMTY4IiB5PSIxMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0MCIgcng9IjMiIGZpbGw9IiM2NjdlZWEiLz48cmVjdCB4PSIxODQiIHk9IjEwMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjUwIiByeD0iMyIgZmlsbD0iIzY2N2VlYSIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjIwMCIgeT0iODgiIHdpZHRoPSIxMiIgaGVpZ2h0PSI2MiIgcng9IjMiIGZpbGw9IiM2NjdlZWEiIG9wYWNpdHk9IjAuNzAiLz48L3N2Zz4=",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
       "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTk2IDI4aDY0bDY0IDQ0djg4bC02NCA0NEg5NkwzMiAxNjBWNzJMOTYgMjhaIiBzdHJva2U9IiM2NjdlZWEiIHN0cm9rZS13aWR0aD0iMTYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNjAgMTMwIEg5MCBMMTA2IDk0IEwxMTggMTQ2IEwxMzIgMTE4IEwxNDIgMTMwIEgxNjQiIHN0cm9rZT0iIzY2N2VlYSIgc3Ryb2tlLXdpZHRoPSIxMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+PHJlY3QgeD0iMTY4IiB5PSIxMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0MCIgcng9IjMiIGZpbGw9IiM2NjdlZWEiLz48cmVjdCB4PSIxODQiIHk9IjEwMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjUwIiByeD0iMyIgZmlsbD0iIzY2N2VlYSIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjIwMCIgeT0iODgiIHdpZHRoPSIxMiIgaGVpZ2h0PSI2MiIgcng9IjMiIGZpbGw9IiM2NjdlZWEiIG9wYWNpdHk9IjAuNzAiLz48L3N2Zz4=",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9IiM2NjdlZWEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIGZpbGw9IiNmOGZhZmMiIHJ4PSI0OCIvPjxwYXRoIGQ9Ik05NiAyOGg2NGw2NCA0NHY4OGwtNjQgNDRIOTZMMzIgMTYwVjcyTDk2IDI4WiIgc3Ryb2tlPSIjNjY3ZWVhIiBzdHJva2Utd2lkdGg9IjE2IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTYwIDEzMCBIOTAgTDEwNiA5NCBMMTE4IDE0NiBMMTMyIDExOCBMMTQyIDEzMCBIMTY0IiBzdHJva2U9IiM2NjdlZWEiIHN0cm9rZS13aWR0aD0iMTIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPjxyZWN0IHg9IjE2OCIgeT0iMTEwIiB3aWR0aD0iMTIiIGhlaWdodD0iNDAiIHJ4PSIzIiBmaWxsPSIjNjY3ZWVhIi8+PHJlY3QgeD0iMTg0IiB5PSIxMDAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI1MCIgcng9IjMiIGZpbGw9IiM2NjdlZWEiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSIyMDAiIHk9Ijg4IiB3aWR0aD0iMTIiIGhlaWdodD0iNjIiIHJ4PSIzIiBmaWxsPSIjNjY3ZWVhIiBvcGFjaXR5PSIwLjcwIi8+PC9zdmc+",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["health", "fitness", "wellness", "lifestyle"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjU2OCIgdmlld0JveD0iMCAwIDMyMCA1NjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjMyMCIgaGVpZ2h0PSI1NjgiIGZpbGw9IiNmOGZhZmMiLz48dGV4dCB4PSIxNjAiIHk9IjI4NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY2N2VlYSIgZm9udC1zaXplPSIyNCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPldlbGxuZXNzIEFwcDwvdGV4dD48L3N2Zz4=",
+      "sizes": "320x568",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
     }
   ]
 }

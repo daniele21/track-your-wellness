@@ -6480,6 +6480,97 @@ textarea:focus-visible {
     }
 }
 
+/* PWA Install Prompt Styles */
+.pwa-install-prompt {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 400px;
+    background: var(--surface-elevated);
+    border: 1px solid var(--divider-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(16px);
+    z-index: 1000;
+    animation: slideUpFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pwa-install-content {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.pwa-install-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pwa-install-icon .material-symbols-outlined {
+    color: white;
+    font-size: 24px;
+}
+
+.pwa-install-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.pwa-install-text h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.pwa-install-text p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.pwa-install-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.pwa-install-btn {
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    min-height: 40px !important;
+}
+
+.pwa-dismiss-btn {
+    padding: 10px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 8px !important;
+}
+
+@keyframes slideUpFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 /* PWA Specific Mobile Enhancements */
 @media (display-mode: standalone) {
     /* When app is installed as PWA */
@@ -6501,6 +6592,38 @@ textarea:focus-visible {
     
     .fab {
         bottom: calc(90px + env(safe-area-inset-bottom));
+    }
+}
+
+/* PWA Install Prompt Mobile Adjustments */
+@media (max-width: 768px) {
+    .pwa-install-prompt {
+        bottom: calc(100px + env(safe-area-inset-bottom));
+        width: calc(100% - 32px);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .pwa-install-content {
+        padding: 16px;
+        gap: 12px;
+    }
+    
+    .pwa-install-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .pwa-install-icon .material-symbols-outlined {
+        font-size: 20px;
+    }
+    
+    .pwa-install-text h3 {
+        font-size: 15px;
+    }
+    
+    .pwa-install-text p {
+        font-size: 13px;
     }
 }
 

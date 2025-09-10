@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { authService, AuthUser } from './services/authService';
 import { LoginPage } from './components/LoginPage';
+import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 
 // Import your existing app component
 import { App as WellnessApp } from './WellnessApp';
@@ -54,7 +55,12 @@ const App: React.FC = () => {
   }
 
   // Show main app if authenticated
-  return <WellnessApp user={user} />;
+  return (
+    <>
+      <WellnessApp user={user} />
+      <PWAInstallPrompt />
+    </>
+  );
 };
 
 // Render the app
