@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal } from './Modal';
-import { WorkoutRoutine, ExerciseDefinition } from '../types/index';
+import { WorkoutRoutine, ExerciseDefinition, WORKOUT_CATEGORIES } from '../types/index';
 import { generateUniqueId } from '../types/utils/helpers';
 
 interface EditRoutineModalProps {
@@ -76,6 +76,49 @@ export const EditRoutineModal: React.FC<EditRoutineModalProps> = ({ isOpen, rout
             className="exercise-edit-textarea"
             placeholder="Descrizione della scheda di allenamento..."
             rows={2}
+          />
+        </div>
+        
+        <div className="form-group-row">
+          <div className="form-group">
+            <label>Categoria</label>
+            <select 
+              value={localRoutine.category || 'altro'} 
+              onChange={e => handleChange('category', e.target.value)}
+              className="exercise-edit-input"
+            >
+              {WORKOUT_CATEGORIES.map(category => (
+                <option key={category.value} value={category.value}>
+                  {category.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="form-group">
+            <label>Difficoltà</label>
+            <select 
+              value={localRoutine.difficulty || 'intermedio'} 
+              onChange={e => handleChange('difficulty', e.target.value)}
+              className="exercise-edit-input"
+            >
+              <option value="principiante">Principiante</option>
+              <option value="intermedio">Intermedio</option>
+              <option value="avanzato">Avanzato</option>
+            </select>
+          </div>
+        </div>
+        
+        <div className="form-group">
+          <label>Durata Stimata (minuti)</label>
+          <input 
+            type="number" 
+            value={localRoutine.estimatedDuration || ''} 
+            onChange={e => handleChange('estimatedDuration', parseInt(e.target.value) || undefined)}
+            className="exercise-edit-input"
+            placeholder="60"
+            min="10"
+            max="300"
           />
         </div>
       </div>

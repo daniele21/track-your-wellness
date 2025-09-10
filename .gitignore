@@ -35,3 +35,4 @@ config/secrets.json
 *.njsproj
 *.sln
 *.sw?
+.firebase/hosting.ZGlzdA.cache

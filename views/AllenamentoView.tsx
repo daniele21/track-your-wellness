@@ -1,6 +1,10 @@
 
 import React, { useState } from 'react';
 import { RoutineImportModal } from '../components/RoutineImportModal';
+import { WorkoutCalendar } from '../components/WorkoutCalendar';
+import { WorkoutSearch } from '../components/WorkoutSearch';
+import { ExerciseAnalytics } from '../components/ExerciseAnalytics';
+import { WorkoutLibrary } from '../components/WorkoutLibrary';
 import { WorkoutRoutine, WorkoutSession, NutritionGoals } from '../types/index';
 import { generateUniqueId, formatDuration } from '../types/utils/helpers';
 import { analyzeWorkoutPlanWithGemini } from '../services/geminiService';
@@ -17,13 +21,14 @@ interface AllenamentoViewProps {
 }
 
 export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, history, goals, onSaveRoutines, onStartWorkout, onEditSession, onDeleteSession }) => {
-    const [tab, setTab] = useState<'schede' | 'storico'>('schede');
+    const [tab, setTab] = useState<'libreria' | 'schede' | 'storico' | 'calendario' | 'ricerca' | 'analisi'>('libreria');
     const [isImportModalOpen, setImportModalOpen] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analysisResult, setAnalysisResult] = useState('');
     const [editRoutineModalOpen, setEditRoutineModalOpen] = useState(false);
     const [routineToEdit, setRoutineToEdit] = useState<WorkoutRoutine | null>(null);
     const [expandedRoutines, setExpandedRoutines] = useState<Set<string>>(new Set());
+    const [selectedDate, setSelectedDate] = useState<string>('');
 
     const toggleRoutineExpansion = (routineId: string) => {
         const newExpanded = new Set(expandedRoutines);
@@ -83,9 +88,59 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
     return (
         <>
             <div className="workout-tabs">
-                <button className={tab === 'schede' ? 'active' : ''} onClick={() => setTab('schede')}>Schede</button>
-                <button className={tab === 'storico' ? 'active' : ''} onClick={() => setTab('storico')}>Storico</button>
+                <button className={tab === 'libreria' ? 'active' : ''} onClick={() => setTab('libreria')}>
+                    <span className="material-symbols-outlined tab-icon">library_books</span>
+                    <span className="tab-text-full">Libreria</span>
+                    <span className="tab-text-short">Lib</span>
+                </button>
+                <button className={tab === 'schede' ? 'active' : ''} onClick={() => setTab('schede')}>
+                    <span className="material-symbols-outlined tab-icon">fitness_center</span>
+                    <span className="tab-text-full">Le Mie Schede</span>
+                    <span className="tab-text-short">Mie</span>
+                </button>
+                <button className={tab === 'storico' ? 'active' : ''} onClick={() => setTab('storico')}>
+                    <span className="material-symbols-outlined tab-icon">history</span>
+                    <span className="tab-text-full">Storico</span>
+                    <span className="tab-text-short">Stor</span>
+                </button>
+                <button className={tab === 'calendario' ? 'active' : ''} onClick={() => setTab('calendario')}>
+                    <span className="material-symbols-outlined tab-icon">calendar_month</span>
+                    <span className="tab-text-full">Calendario</span>
+                    <span className="tab-text-short">Cal</span>
+                </button>
+                <button className={tab === 'ricerca' ? 'active' : ''} onClick={() => setTab('ricerca')}>
+                    <span className="material-symbols-outlined tab-icon">search</span>
+                    <span className="tab-text-full">Ricerca</span>
+                    <span className="tab-text-short">Ric</span>
+                </button>
+                <button className={tab === 'analisi' ? 'active' : ''} onClick={() => setTab('analisi')}>
+                    <span className="material-symbols-outlined tab-icon">analytics</span>
+                    <span className="tab-text-full">Analisi</span>
+                    <span className="tab-text-short">Ana</span>
+                </button>
             </div>
+            
+            {tab === 'libreria' && (
+                <WorkoutLibrary
+                    userRoutines={routines}
+                    onSelectRoutine={(routine) => {
+                        // Switch to schede tab and expand the routine
+                        setTab('schede');
+                        setExpandedRoutines(new Set([routine.id]));
+                    }}
+                    onStartWorkout={onStartWorkout}
+                    onEditRoutine={(routine) => {
+                        if (!routine.isPreset) {
+                            setRoutineToEdit(routine);
+                            setEditRoutineModalOpen(true);
+                        }
+                    }}
+                    onDeleteRoutine={(routineId) => {
+                        const updatedRoutines = routines.filter(r => r.id !== routineId);
+                        onSaveRoutines(updatedRoutines);
+                    }}
+                />
+            )}
             
             {tab === 'schede' && (
                 <div>
@@ -248,7 +303,14 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                     {editRoutineModalOpen && (
                         <EditRoutineModal
                             isOpen={editRoutineModalOpen}
-                            routine={routineToEdit || { id: '', name: '', description: '', exercises: [] }}
+                            routine={routineToEdit || { 
+                                id: '', 
+                                name: '', 
+                                description: '', 
+                                exercises: [],
+                                category: 'altro' as const,
+                                difficulty: 'intermedio' as const
+                            }}
                             onClose={() => { setEditRoutineModalOpen(false); setRoutineToEdit(null); }}
                             onSave={routine => {
                                 if (!routine.id) {
@@ -293,6 +355,31 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                          <div className="card empty-state"><p>Nessun allenamento registrato.</p></div>
                     )}
                 </div>
+            )}
+            
+            {tab === 'calendario' && (
+                <WorkoutCalendar 
+                    workoutSessions={history}
+                    onDateSelect={(date: string) => {
+                        // Optional: filter to show sessions for selected date
+                        console.log('Selected date:', date);
+                    }}
+                />
+            )}
+            
+            {tab === 'ricerca' && (
+                <WorkoutSearch 
+                    workoutSessions={history}
+                    onSessionSelect={onEditSession}
+                    onEditSession={onEditSession}
+                    onDeleteSession={onDeleteSession}
+                />
+            )}
+            
+            {tab === 'analisi' && (
+                <ExerciseAnalytics 
+                    workoutSessions={history}
+                />
             )}
             
             <RoutineImportModal isOpen={isImportModalOpen} onClose={() => setImportModalOpen(false)} onImport={handleImport}/>

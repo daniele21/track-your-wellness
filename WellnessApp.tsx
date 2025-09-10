@@ -21,6 +21,7 @@ import { StatsView } from './views/StatsView';
 import { ProfileView } from './views/ProfileView';
 import { ActiveWorkoutSession } from './views/ActiveWorkoutSession';
 import { EditWorkoutSessionView } from './views/EditWorkoutSessionView';
+import { ReportsView } from './components/ReportsView';
 
 interface WellnessAppProps {
   user: AuthUser;
@@ -119,6 +120,32 @@ export const App: React.FC<WellnessAppProps> = ({ user }) => {
         const newDailyLogs = { ...dailyLogs, [dateKey]: newLog };
         setDailyLogs(newDailyLogs);
         logInfo('Food item deleted.', { mealType, itemIndex });
+    };
+    
+    const handleMoveFoodToMeal = async (fromMeal: MealType, toMeal: MealType, itemIndex: number) => {
+        const dateKey = formatDate(currentDate);
+        const logForDate = dailyLogs[dateKey];
+        if (!logForDate?.[fromMeal]) return;
+
+        const newLog = { ...logForDate };
+        
+        // Get the item to move
+        const itemToMove = newLog[fromMeal]![itemIndex];
+        
+        // Remove from source meal
+        newLog[fromMeal]!.splice(itemIndex, 1);
+        
+        // Add to destination meal
+        if (!newLog[toMeal]) {
+            newLog[toMeal] = [];
+        }
+        newLog[toMeal]!.push(itemToMove);
+        
+        await dataService.saveDailyLog(newLog, dateKey);
+        
+        const newDailyLogs = { ...dailyLogs, [dateKey]: newLog };
+        setDailyLogs(newDailyLogs);
+        logInfo('Food item moved.', { fromMeal, toMeal, itemIndex });
     };
     
     const handleOpenEditFoodModal = (mealType: MealType, itemIndex: number) => {
@@ -299,6 +326,7 @@ export const App: React.FC<WellnessAppProps> = ({ user }) => {
                             onAddMealClick={() => setAddMealModalOpen(true)}
                             onDeleteFood={handleDeleteFood}
                             onEditFood={handleOpenEditFoodModal}
+                            onMoveFoodToMeal={handleMoveFoodToMeal}
                         />;
             case 'allenamento':
                  return <AllenamentoView 
@@ -311,14 +339,19 @@ export const App: React.FC<WellnessAppProps> = ({ user }) => {
                             onDeleteSession={handleDeleteWorkout}
                         />;
             case 'misure':
-            case 'analisi':
                  return <StatsView 
                             dailyLogs={dailyLogs} 
                             theme={theme}
                             bodyMeasurements={bodyMeasurements}
                             onOpenMeasurementModal={handleOpenMeasurementModal}
                             onDeleteMeasurement={handleDeleteMeasurement}
-                            activeTab={view}
+                            activeTab='misure'
+                        />;
+            case 'analisi':
+                 return <ReportsView 
+                            workoutSessions={workoutHistory}
+                            measurements={bodyMeasurements}
+                            nutritionData={dailyLogs}
                         />;
             case 'profile':
                 return <ProfileView 

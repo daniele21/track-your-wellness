@@ -46,11 +46,17 @@ export interface ExerciseDefinition {
     notes: string;
 }
 
+export type WorkoutCategory = 'forza' | 'cardio' | 'crossfit' | 'bodybuilding' | 'powerlifting' | 'funzionale' | 'yoga' | 'pilates' | 'altro';
+
 export interface WorkoutRoutine {
     id: string;
     name: string;
     description: string;
     exercises: ExerciseDefinition[];
+    category: WorkoutCategory;
+    difficulty?: 'principiante' | 'intermedio' | 'avanzato';
+    estimatedDuration?: number; // in minutes
+    isPreset?: boolean; // true for predefined workouts
 }
 
 export interface LoggedSet {
@@ -65,6 +71,7 @@ export interface LoggedExercise {
     targetReps: string;
     sets: (LoggedSet | null)[];
     notes: string;
+    completed?: boolean; // Flag to mark exercise as done
 }
 
 export interface WorkoutSession {
@@ -74,6 +81,7 @@ export interface WorkoutSession {
     routineName: string;
     exercises: LoggedExercise[];
     duration: number; // in seconds
+    sessionNotes?: string; // Notes for the entire session
 }
 
 // --- INTERFACCE E TIPI MISURAZIONI --- //
@@ -89,6 +97,19 @@ export type Theme = 'light' | 'dark';
 
 
 export const MEAL_TYPES: MealType[] = ['Colazione', 'Spuntino', 'Pranzo', 'Cena'];
+
+export const WORKOUT_CATEGORIES: { value: WorkoutCategory; label: string; icon: string }[] = [
+    { value: 'forza', label: 'Forza', icon: 'fitness_center' },
+    { value: 'cardio', label: 'Cardio', icon: 'directions_run' },
+    { value: 'crossfit', label: 'CrossFit', icon: 'sports_gymnastics' },
+    { value: 'bodybuilding', label: 'Bodybuilding', icon: 'sports_mma' },
+    { value: 'powerlifting', label: 'Powerlifting', icon: 'fitness_center' },
+    { value: 'funzionale', label: 'Funzionale', icon: 'sports_handball' },
+    { value: 'yoga', label: 'Yoga', icon: 'self_improvement' },
+    { value: 'pilates', label: 'Pilates', icon: 'accessibility_new' },
+    { value: 'altro', label: 'Altro', icon: 'more_horiz' }
+];
+
 export const DEFAULT_GOALS: NutritionGoals = {
     kcal: { value: 2000, enabled: true },
     carbs: { value: 250, enabled: true },

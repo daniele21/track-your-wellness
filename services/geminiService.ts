@@ -278,15 +278,17 @@ Usa un tono professionale ma incoraggiante. Massimo 300 parole.`;
 export const analyzeMealPlanWithGemini = async (
     dailyLogs: { [date: string]: DailyLog },
     workoutSessions: WorkoutSession[],
-    goals: NutritionGoals
+    goals: NutritionGoals,
+    currentDate?: Date
 ): Promise<string> => {
     // Check authentication before making API call
     await requireAuth();
     
     const model = "gemini-2.5-flash";
     
-    // Analizza i pasti delle ultime 2 settimane
-    const twoWeeksAgo = new Date();
+    // Analizza i pasti delle ultime 2 settimane dalla data corrente
+    const referenceDate = currentDate || new Date();
+    const twoWeeksAgo = new Date(referenceDate);
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
     
     const recentDates = Object.keys(dailyLogs)
