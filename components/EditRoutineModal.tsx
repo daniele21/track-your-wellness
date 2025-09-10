@@ -198,23 +198,28 @@ export const EditRoutineModal: React.FC<EditRoutineModalProps> = ({ isOpen, rout
         ) : (
           <div className="add-exercise-section">
             <div className="empty-exercises-state">
-              <span className="material-symbols-outlined" style={{ fontSize: '48px', opacity: 0.3, marginBottom: '12px', display: 'block' }}>
-                fitness_center
-              </span>
-              <p>Nessun esercizio nella scheda</p>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                Clicca "Aggiungi Esercizio" per iniziare a costruire la tua scheda
-              </p>
+              <div className="empty-icon-container">
+                <span className="material-symbols-outlined empty-icon">
+                  fitness_center
+                </span>
+              </div>
+              <h4>Nessun esercizio nella scheda</h4>
+              <p>Clicca "Aggiungi Esercizio" per iniziare a costruire la tua scheda di allenamento personalizzata</p>
+              <button type="button" className="btn-primary add-first-exercise" onClick={handleAddExercise}>
+                <span className="material-symbols-outlined">add_circle</span>
+                Aggiungi Primo Esercizio
+              </button>
             </div>
           </div>
         )}
       </div>
 
       <div className="modal-actions">
-        <button className="btn-secondary" onClick={onClose}>Annulla</button>
-        <button className="btn-primary" onClick={handleSave}>
+        <button className="btn-secondary btn-icon-only" onClick={onClose} title="Chiudi">
+          <span className="material-symbols-outlined">close</span>
+        </button>
+        <button className="btn-primary btn-icon-only" onClick={handleSave} title="Salva Modifiche">
           <span className="material-symbols-outlined">save</span>
-          Salva Modifiche
         </button>
       </div>
     </Modal>

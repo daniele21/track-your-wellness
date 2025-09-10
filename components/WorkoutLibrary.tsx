@@ -71,22 +71,10 @@ export const WorkoutLibrary: React.FC<WorkoutLibraryProps> = ({
         <div className="workout-library">
             <div className="library-header">
                 <h3>Libreria Allenamenti</h3>
-                <div className="library-controls">
-                    <div className="toggle-presets">
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={showPresets}
-                                onChange={(e) => setShowPresets(e.target.checked)}
-                            />
-                            <span>Mostra allenamenti predefiniti</span>
-                        </label>
-                    </div>
-                </div>
             </div>
 
-            {/* Search and Filters */}
-            <div className="library-filters">
+            {/* Search and Filters - All in one row */}
+            <div className="library-filters-row">
                 <div className="search-box">
                     <span className="material-symbols-outlined">search</span>
                     <input
@@ -96,6 +84,18 @@ export const WorkoutLibrary: React.FC<WorkoutLibraryProps> = ({
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
+
+                <button 
+                    className={`preset-toggle ${showPresets ? 'active' : ''}`}
+                    onClick={() => setShowPresets(!showPresets)}
+                >
+                    <span className="material-symbols-outlined">
+                        {showPresets ? 'library_books' : 'person'}
+                    </span>
+                    <span className="toggle-label">
+                        {showPresets ? 'Tutti' : 'Miei'}
+                    </span>
+                </button>
 
                 <div className="difficulty-filter">
                     <select 
@@ -117,25 +117,34 @@ export const WorkoutLibrary: React.FC<WorkoutLibraryProps> = ({
                     onClick={() => setSelectedCategory('tutti')}
                 >
                     <span className="material-symbols-outlined">fitness_center</span>
-                    Tutti
+                    <span className="tab-text">Tutti</span>
                 </button>
                 <button 
                     className={selectedCategory === 'miei' ? 'active' : ''}
                     onClick={() => setSelectedCategory('miei')}
                 >
                     <span className="material-symbols-outlined">person</span>
-                    I Miei
+                    <span className="tab-text">Miei</span>
                 </button>
-                {WORKOUT_CATEGORIES.map(category => (
-                    <button
-                        key={category.value}
-                        className={selectedCategory === category.value ? 'active' : ''}
-                        onClick={() => setSelectedCategory(category.value)}
-                    >
-                        <span className="material-symbols-outlined">{category.icon}</span>
-                        {category.label}
-                    </button>
-                ))}
+                {WORKOUT_CATEGORIES.map(category => {
+                    // Create mobile-friendly shortened labels
+                    const mobileLabel = category.value === 'bodybuilding' ? 'Body' :
+                                      category.value === 'powerlifting' ? 'Power' :
+                                      category.value === 'funzionale' ? 'Funz.' :
+                                      category.value === 'crossfit' ? 'Cross' :
+                                      category.label;
+                    
+                    return (
+                        <button
+                            key={category.value}
+                            className={selectedCategory === category.value ? 'active' : ''}
+                            onClick={() => setSelectedCategory(category.value)}
+                        >
+                            <span className="material-symbols-outlined">{category.icon}</span>
+                            <span className="tab-text">{mobileLabel}</span>
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Routines Grid */}
@@ -202,25 +211,24 @@ export const WorkoutLibrary: React.FC<WorkoutLibraryProps> = ({
                                     <span className="material-symbols-outlined">play_arrow</span>
                                     Inizia
                                 </button>
-                                {!routine.isPreset && (
-                                    <>
-                                        {onEditRoutine && (
-                                            <button 
-                                                className="btn-edit"
-                                                onClick={() => onEditRoutine(routine)}
-                                            >
-                                                <span className="material-symbols-outlined">edit</span>
-                                            </button>
-                                        )}
-                                        {onDeleteRoutine && (
-                                            <button 
-                                                className="btn-danger-icon"
-                                                onClick={() => onDeleteRoutine(routine.id)}
-                                            >
-                                                <span className="material-symbols-outlined">delete</span>
-                                            </button>
-                                        )}
-                                    </>
+                                {onEditRoutine && (
+                                    <button 
+                                        className="btn-edit"
+                                        onClick={() => onEditRoutine(routine)}
+                                        title={routine.isPreset ? "Crea copia per modificare" : "Modifica scheda"}
+                                    >
+                                        <span className="material-symbols-outlined">
+                                            {routine.isPreset ? 'content_copy' : 'edit'}
+                                        </span>
+                                    </button>
+                                )}
+                                {!routine.isPreset && onDeleteRoutine && (
+                                    <button 
+                                        className="btn-danger-icon"
+                                        onClick={() => onDeleteRoutine(routine.id)}
+                                    >
+                                        <span className="material-symbols-outlined">delete</span>
+                                    </button>
                                 )}
                             </div>
                         </div>

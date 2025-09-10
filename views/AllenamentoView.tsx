@@ -101,7 +101,7 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                 <button className={tab === 'storico' ? 'active' : ''} onClick={() => setTab('storico')}>
                     <span className="material-symbols-outlined tab-icon">history</span>
                     <span className="tab-text-full">Storico</span>
-                    <span className="tab-text-short">Stor</span>
+                    <span className="tab-text-short">Storico</span>
                 </button>
                 <button className={tab === 'calendario' ? 'active' : ''} onClick={() => setTab('calendario')}>
                     <span className="material-symbols-outlined tab-icon">calendar_month</span>
@@ -111,12 +111,12 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                 <button className={tab === 'ricerca' ? 'active' : ''} onClick={() => setTab('ricerca')}>
                     <span className="material-symbols-outlined tab-icon">search</span>
                     <span className="tab-text-full">Ricerca</span>
-                    <span className="tab-text-short">Ric</span>
+                    <span className="tab-text-short">Ricerca</span>
                 </button>
                 <button className={tab === 'analisi' ? 'active' : ''} onClick={() => setTab('analisi')}>
                     <span className="material-symbols-outlined tab-icon">analytics</span>
                     <span className="tab-text-full">Analisi</span>
-                    <span className="tab-text-short">Ana</span>
+                    <span className="tab-text-short">Analisi</span>
                 </button>
             </div>
             
@@ -130,10 +130,20 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                     }}
                     onStartWorkout={onStartWorkout}
                     onEditRoutine={(routine) => {
-                        if (!routine.isPreset) {
+                        // Always allow editing, but for presets create a copy
+                        if (routine.isPreset) {
+                            // Create a copy of the preset routine for editing
+                            const routineCopy = {
+                                ...routine,
+                                id: '', // Will get new ID when saved
+                                name: `${routine.name} (Copia)`,
+                                isPreset: false
+                            };
+                            setRoutineToEdit(routineCopy);
+                        } else {
                             setRoutineToEdit(routine);
-                            setEditRoutineModalOpen(true);
                         }
+                        setEditRoutineModalOpen(true);
                     }}
                     onDeleteRoutine={(routineId) => {
                         const updatedRoutines = routines.filter(r => r.id !== routineId);
@@ -144,101 +154,130 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
             
             {tab === 'schede' && (
                 <div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '18px', gap: '12px' }}>
-                        <button className="action-card new-card" style={{ minWidth: '180px', boxShadow: '0 4px 16px rgba(16,185,129,0.08)', border: 'none', background: 'linear-gradient(135deg,#10b981,#059669)', color: 'white', fontWeight: 600, fontSize: '15px', display: 'flex', alignItems: 'center', gap: '10px', padding: '14px 24px', borderRadius: '14px', transition: 'all 0.2s' }} onClick={() => setEditRoutineModalOpen(true)}>
-                            <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>add</span>
-                            Nuova Scheda
+                    <div className="workout-actions-container">
+                        <button className="workout-action-btn new-routine-btn" onClick={() => setEditRoutineModalOpen(true)}>
+                            <span className="material-symbols-outlined">add</span>
+                            <span className="action-text">Nuova Scheda</span>
                         </button>
-                        <button className="action-card import-card" style={{ minWidth: '180px', boxShadow: '0 4px 16px rgba(59,130,246,0.08)', border: 'none', background: 'linear-gradient(135deg,#3b82f6,#6366f1)', color: 'white', fontWeight: 600, fontSize: '15px', display: 'flex', alignItems: 'center', gap: '10px', padding: '14px 24px', borderRadius: '14px', transition: 'all 0.2s' }} onClick={() => setImportModalOpen(true)}>
-                            <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>upload</span>
-                            Importa Scheda
+                        <button className="workout-action-btn import-routine-btn" onClick={() => setImportModalOpen(true)}>
+                            <span className="material-symbols-outlined">upload</span>
+                            <span className="action-text">Importa</span>
                         </button>
                     </div>
                     {routines.length > 0 ? routines.map(routine => (
-                        <div className="card routine-card" key={routine.id}>
-                            <div className="routine-card-header">
-                                <div className="routine-info">
-                                    <div className="routine-title-section" style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'nowrap' }}>
-                                        <h4 style={{ margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: '0 1 auto' }}>{routine.name}</h4>
-                                        {/* <div className="routine-status-badge" style={{ flexShrink: 0 }}>
-                                            <span className="material-symbols-outlined">verified</span>
-                                            Importata
-                                        </div> */}
+                        <div className="routine-card-container" key={routine.id}>
+                            <div className="routine-card-main">
+                                {/* Header Section with Title and Quick Info */}
+                                <div className="routine-header">
+                                    <div className="routine-title-area">
+                                        <h4 className="routine-title">{routine.name}</h4>
+                                        <div className="routine-quick-stats">
+                                            <span className="stat-item">
+                                                <span className="material-symbols-outlined">fitness_center</span>
+                                                {(routine.exercises || []).length}
+                                            </span>
+                                            <span className="stat-item">
+                                                <span className="material-symbols-outlined">schedule</span>
+                                                ~{Math.max(30, (routine.exercises || []).length * 5)}min
+                                            </span>
+                                        </div>
                                     </div>
-                                    {routine.description && (
+                                    <button 
+                                        className="expand-toggle-btn" 
+                                        onClick={() => toggleRoutineExpansion(routine.id)}
+                                        aria-label={expandedRoutines.has(routine.id) ? 'Comprimi dettagli' : 'Espandi dettagli'}
+                                    >
+                                        <span className="material-symbols-outlined">
+                                            {expandedRoutines.has(routine.id) ? 'expand_less' : 'expand_more'}
+                                        </span>
+                                    </button>
+                                </div>
+
+                                {/* Description and Meta Info */}
+                                {routine.description && (
+                                    <div className="routine-description-section">
                                         <p className="routine-description">{routine.description}</p>
-                                    )}
-                                    <div className="routine-meta">
-                                        <div className="routine-meta-item">
-                                            <span className="material-symbols-outlined">fitness_center</span>
-                                            <span>{(routine.exercises || []).length} esercizi</span>
-                                        </div>
-                                        <div className="routine-meta-item">
-                                            <span className="material-symbols-outlined">schedule</span>
-                                            <span>~{Math.max(30, (routine.exercises || []).length * 5)} min</span>
-                                        </div>
-                                        <div className="routine-meta-item difficulty">
+                                    </div>
+                                )}
+
+                                <div className="routine-meta-section">
+                                    <div className="meta-badges">
+                                        <div className="meta-badge difficulty">
                                             <span className="material-symbols-outlined">trending_up</span>
                                             <span>Intermedio</span>
                                         </div>
-                                    </div>
-                                    <div className="routine-actions-row" style={{ width: '100%', marginTop: '18px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px' }}>
-                                        <button 
-                                            className="expand-toggle" 
-                                            onClick={() => toggleRoutineExpansion(routine.id)}
-                                            aria-label={expandedRoutines.has(routine.id) ? 'Comprimi dettagli' : 'Espandi dettagli'}
-                                        >
-                                            <span className="material-symbols-outlined">
-                                                {expandedRoutines.has(routine.id) ? 'expand_less' : 'expand_more'}
-                                            </span>
-                                        </button>
-                                        <div className="routine-actions" style={{ gap: '8px' }}>
-                                            <button onClick={() => handleEditRoutine(routine)} className="btn-edit" aria-label={`Modifica scheda ${routine.name}`}> 
-                                                <span className="material-symbols-outlined">edit</span>
-                                                <span>Modifica</span>
-                                            </button>
-                                            <button className="btn-primary btn-start" onClick={() => onStartWorkout(routine)}>
-                                                <span className="material-symbols-outlined">play_arrow</span>
-                                                <span>Inizia Allenamento</span>
-                                            </button>
-                                            <button onClick={() => handleDeleteRoutine(routine.id)} className="btn-danger-icon btn-delete" aria-label={`Elimina scheda ${routine.name}`}> 
-                                                <span className="material-symbols-outlined">delete</span>
-                                            </button>
+                                        <div className="meta-badge category">
+                                            <span className="material-symbols-outlined">category</span>
+                                            <span>{routine.category || 'Generale'}</span>
                                         </div>
                                     </div>
+                                </div>
+
+                                {/* Primary Action Section */}
+                                <div className="routine-primary-action">
+                                    <button className="start-workout-button" onClick={() => onStartWorkout(routine)}>
+                                        <span className="material-symbols-outlined">play_arrow</span>
+                                        <span>Inizia Allenamento</span>
+                                    </button>
+                                </div>
+
+                                {/* Secondary Actions */}
+                                <div className="routine-secondary-actions">
+                                    <button 
+                                        onClick={() => handleEditRoutine(routine)} 
+                                        className="secondary-action-btn edit-btn"
+                                        aria-label={`Modifica scheda ${routine.name}`}
+                                    > 
+                                        <span className="material-symbols-outlined">edit</span>
+                                        <span>Modifica</span>
+                                    </button>
+                                    <button 
+                                        onClick={() => handleDeleteRoutine(routine.id)} 
+                                        className="secondary-action-btn delete-btn"
+                                        aria-label={`Elimina scheda ${routine.name}`}
+                                    > 
+                                        <span className="material-symbols-outlined">delete</span>
+                                        <span>Elimina</span>
+                                    </button>
                                 </div>
                             </div>
                             
                             {expandedRoutines.has(routine.id) && (
-                                <div className="routine-exercises">
-                                    <div className="exercises-header">
-                                        <h5>Lista Esercizi</h5>
-                                        <div className="exercises-count">
-                                            {routine.exercises.length} / {routine.exercises.length} esercizi
+                                <div className="routine-exercises-expanded">
+                                    <div className="exercises-section-header">
+                                        <div className="section-title">
+                                            <span className="material-symbols-outlined">list</span>
+                                            <h5>Lista Esercizi</h5>
+                                        </div>
+                                        <div className="exercises-summary">
+                                            <span className="exercises-count-badge">
+                                                {routine.exercises.length} esercizi
+                                            </span>
                                         </div>
                                     </div>
-                                    <div className="exercises-grid">
+                                    <div className="exercises-list">
                                         {routine.exercises.map((exercise, index) => (
-                                            <div key={exercise.id} className="exercise-item">
-                                                <div className="exercise-number">
+                                            <div key={exercise.id} className="exercise-card">
+                                                <div className="exercise-index">
                                                     {index + 1}
                                                 </div>
-                                                <div className="exercise-content">
+                                                <div className="exercise-info">
                                                     <div className="exercise-name">
                                                         {exercise.name || 'Esercizio senza nome'}
                                                     </div>
-                                                    <div className="exercise-details">
-                                                        <div className="exercise-stat sets">
+                                                    <div className="exercise-stats">
+                                                        <div className="stat-group">
                                                             <span className="material-symbols-outlined">repeat</span>
                                                             <span>{exercise.sets} serie</span>
                                                         </div>
-                                                        <div className="exercise-stat reps">
+                                                        <div className="stat-separator">×</div>
+                                                        <div className="stat-group">
                                                             <span className="material-symbols-outlined">fitness_center</span>
-                                                            <span>{exercise.reps} reps</span>
+                                                            <span>{exercise.reps} rip</span>
                                                         </div>
                                                     </div>
                                                     {exercise.notes && (
-                                                        <div className="exercise-notes-preview">
+                                                        <div className="exercise-notes">
                                                             <span className="material-symbols-outlined">lightbulb</span>
                                                             <span>{exercise.notes}</span>
                                                         </div>
@@ -299,32 +338,6 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
                             <div style={{whiteSpace: 'pre-wrap', lineHeight: '1.6'}}>{analysisResult}</div>
                         </div>
                     )}
-                    {/* Edit Routine Modal */}
-                    {editRoutineModalOpen && (
-                        <EditRoutineModal
-                            isOpen={editRoutineModalOpen}
-                            routine={routineToEdit || { 
-                                id: '', 
-                                name: '', 
-                                description: '', 
-                                exercises: [],
-                                category: 'altro' as const,
-                                difficulty: 'intermedio' as const
-                            }}
-                            onClose={() => { setEditRoutineModalOpen(false); setRoutineToEdit(null); }}
-                            onSave={routine => {
-                                if (!routine.id) {
-                                    // New routine, assign id and add
-                                    const newRoutine = { ...routine, id: generateUniqueId(), exercises: (routine.exercises || []).map(ex => ({...ex, id: generateUniqueId()})) };
-                                    onSaveRoutines([...routines, newRoutine]);
-                                } else {
-                                    handleSaveEditedRoutine(routine);
-                                }
-                                setEditRoutineModalOpen(false);
-                                setRoutineToEdit(null);
-                            }}
-                        />
-                    )}
                 </div>
             )}
             
@@ -383,6 +396,33 @@ export const AllenamentoView: React.FC<AllenamentoViewProps> = ({ routines, hist
             )}
             
             <RoutineImportModal isOpen={isImportModalOpen} onClose={() => setImportModalOpen(false)} onImport={handleImport}/>
+            
+            {/* Edit Routine Modal */}
+            {editRoutineModalOpen && (
+                <EditRoutineModal
+                    isOpen={editRoutineModalOpen}
+                    routine={routineToEdit || { 
+                        id: '', 
+                        name: '', 
+                        description: '', 
+                        exercises: [],
+                        category: 'altro' as const,
+                        difficulty: 'intermedio' as const
+                    }}
+                    onClose={() => { setEditRoutineModalOpen(false); setRoutineToEdit(null); }}
+                    onSave={routine => {
+                        if (!routine.id) {
+                            // New routine, assign id and add
+                            const newRoutine = { ...routine, id: generateUniqueId(), exercises: (routine.exercises || []).map(ex => ({...ex, id: generateUniqueId()})) };
+                            onSaveRoutines([...routines, newRoutine]);
+                        } else {
+                            handleSaveEditedRoutine(routine);
+                        }
+                        setEditRoutineModalOpen(false);
+                        setRoutineToEdit(null);
+                    }}
+                />
+            )}
         </>
     );
 };

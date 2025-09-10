@@ -708,8 +708,8 @@ h4 {
   border: 1px solid var(--divider-color);
   padding: 0; 
   border-radius: var(--border-radius-lg); 
-  width: 90%; 
-  max-width: 600px; 
+  width: 95%; 
+  max-width: 800px; 
   max-height: 90vh;
   box-shadow: var(--shadow-3); 
   transform: scale(0.9) translateY(20px); 
@@ -788,21 +788,460 @@ h4 {
 }
 .modal-actions { 
   display: flex; 
-  justify-content: flex-end; 
-  gap: 12px; 
-  margin-top: 32px; 
-  padding-top: 24px;
+  justify-content: space-between; 
+  align-items: center;
+  gap: 16px; 
+  margin-top: 24px; 
+  padding: 20px 24px;
   border-top: 1px solid var(--divider-color);
   position: sticky;
   bottom: 0;
   background: var(--surface-elevated);
   margin-left: -28px;
   margin-right: -28px;
-  margin-bottom: -28px;
-  padding-left: 28px;
-  padding-right: 28px;
-  padding-bottom: 28px;
 }
+
+/* Modal Action Buttons - Fix text overflow */
+.modal-actions .btn-primary,
+.modal-actions .btn-secondary {
+  min-width: 100px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Icon-only cancel button */
+.modal-actions .btn-icon-only {
+  min-width: 56px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* X button (cancel) - transparent with red icon */
+.modal-actions .btn-secondary.btn-icon-only {
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+  order: 1;
+}
+
+.modal-actions .btn-secondary.btn-icon-only:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  border-color: rgba(220, 38, 38, 0.4);
+  transform: scale(1.05) translateY(-1px);
+  box-shadow: 0 8px 16px rgba(239, 68, 68, 0.25);
+}
+
+.modal-actions .btn-secondary.btn-icon-only:active {
+  transform: scale(1.02) translateY(0px);
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* Save button - primary style */
+.modal-actions .btn-primary.btn-icon-only {
+  background: linear-gradient(135deg, 
+    var(--primary-color) 0%, 
+    #5b21b6 100%);
+  color: white;
+  border-color: var(--primary-color);
+  box-shadow: 
+    0 4px 12px rgba(102, 126, 234, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  order: 2;
+}
+
+.modal-actions .btn-primary.btn-icon-only:hover {
+  background: linear-gradient(135deg, 
+    #5b21b6 0%, 
+    var(--primary-color) 100%);
+  transform: scale(1.05) translateY(-1px);
+  box-shadow: 
+    0 12px 24px rgba(102, 126, 234, 0.4),
+    0 6px 16px rgba(91, 33, 182, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.modal-actions .btn-primary.btn-icon-only:active {
+  transform: scale(1.02) translateY(0px);
+  box-shadow: 
+    0 6px 16px rgba(102, 126, 234, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal-actions .btn-icon-only .material-symbols-outlined {
+  font-size: 24px;
+  margin: 0;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.modal-actions .btn-icon-only:hover .material-symbols-outlined {
+  font-size: 26px;
+}
+
+/* Dark theme support for icon buttons */
+:root[data-theme='dark'] .modal-actions .btn-secondary.btn-icon-only {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.25);
+}
+
+:root[data-theme='dark'] .modal-actions .btn-secondary.btn-icon-only:hover {
+  background: rgba(248, 113, 113, 0.2);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 8px 16px rgba(248, 113, 113, 0.3);
+}
+
+:root[data-theme='dark'] .modal-actions .btn-primary.btn-icon-only {
+  background: linear-gradient(135deg, 
+    var(--primary-color) 0%, 
+    #5b21b6 100%);
+  box-shadow: 
+    0 4px 12px rgba(102, 126, 234, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+:root[data-theme='dark'] .modal-actions .btn-primary.btn-icon-only:hover {
+  box-shadow: 
+    0 12px 24px rgba(102, 126, 234, 0.5),
+    0 6px 16px rgba(91, 33, 182, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Dark theme support for routine cards */
+:root[data-theme='dark'] .routine-card {
+  background: linear-gradient(135deg, 
+      var(--surface-elevated) 0%, 
+      rgba(102, 126, 234, 0.05) 100%) !important;
+  border-color: rgba(102, 126, 234, 0.15) !important;
+  box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      0 2px 6px rgba(102, 126, 234, 0.1) !important;
+}
+
+:root[data-theme='dark'] .routine-card:hover {
+  background: linear-gradient(135deg, 
+      var(--surface-elevated) 0%, 
+      rgba(102, 126, 234, 0.08) 100%) !important;
+  box-shadow: 
+      0 12px 32px rgba(0, 0, 0, 0.3),
+      0 6px 16px rgba(102, 126, 234, 0.2),
+      0 2px 8px rgba(139, 92, 246, 0.15) !important;
+}
+
+:root[data-theme='dark'] .routine-card-header {
+  background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.03) 0%, 
+      rgba(102, 126, 234, 0.08) 100%);
+}
+
+:root[data-theme='dark'] .routine-actions {
+  background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.02) 0%, 
+      rgba(102, 126, 234, 0.05) 100%);
+  border-top-color: rgba(102, 126, 234, 0.15);
+}
+
+/* Dark theme for routine card containers */
+:root[data-theme='dark'] .routine-card-container {
+  background: var(--surface-elevated) !important;
+  border-color: var(--divider-color) !important;
+  box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+:root[data-theme='dark'] .routine-card-container:hover {
+  box-shadow: 
+      0 16px 40px rgba(0, 0, 0, 0.3),
+      0 8px 24px rgba(59, 130, 246, 0.15),
+      0 4px 12px rgba(99, 102, 241, 0.1) !important;
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+:root[data-theme='dark'] .routine-card-main {
+  background: var(--surface-elevated) !important;
+}
+
+:root[data-theme='dark'] .routine-title {
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-color) 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+:root[data-theme='dark'] .stat-item {
+  background: var(--surface-color) !important;
+  border-color: var(--divider-color) !important;
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme='dark'] .stat-item:hover {
+  color: white !important;
+}
+
+:root[data-theme='dark'] .expand-toggle-btn {
+  background: var(--surface-color) !important;
+  border-color: var(--divider-color) !important;
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme='dark'] .routine-description {
+  background: var(--surface-color) !important;
+  border-color: var(--divider-color) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Dark theme text and component fixes */
+:root[data-theme='dark'] .routine-title {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme='dark'] .routine-description {
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme='dark'] .routine-card-header h4 {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme='dark'] .stat-item {
+  color: var(--text-secondary) !important;
+  background: rgba(102, 126, 234, 0.15);
+}
+
+:root[data-theme='dark'] .stat-item .material-symbols-outlined {
+  color: var(--primary-color) !important;
+}
+
+:root[data-theme='dark'] .expand-toggle-btn {
+  background: var(--surface-elevated);
+  border-color: var(--divider-color);
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme='dark'] .expand-toggle-btn:hover {
+  background: var(--surface-color);
+  color: var(--primary-color) !important;
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+}
+
+/* Dark theme support for edit and delete buttons */
+:root[data-theme='dark'] .btn-edit {
+  background: var(--surface-elevated) !important;
+  border-color: var(--divider-color) !important;
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme='dark'] .btn-edit:hover {
+  background: var(--surface-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3) !important;
+}
+
+:root[data-theme='dark'] .btn-edit .material-symbols-outlined {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme='dark'] .btn-edit:hover .material-symbols-outlined {
+  color: var(--primary-color) !important;
+}
+
+:root[data-theme='dark'] .btn-danger-icon {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+:root[data-theme='dark'] .btn-danger-icon:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #dc2626 !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+}
+
+:root[data-theme='dark'] .btn-danger-icon .material-symbols-outlined {
+  color: #ef4444 !important;
+}
+
+:root[data-theme='dark'] .btn-danger-icon:hover .material-symbols-outlined {
+  color: #dc2626 !important;
+}
+
+:root[data-theme='dark'] .btn-delete {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+
+:root[data-theme='dark'] .btn-delete:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #dc2626 !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Dark theme support for secondary action buttons */
+:root[data-theme='dark'] .secondary-action-btn {
+  border-color: var(--divider-color) !important;
+}
+
+:root[data-theme='dark'] .secondary-action-btn.edit-btn {
+  background: var(--surface-elevated) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--divider-color) !important;
+}
+
+:root[data-theme='dark'] .secondary-action-btn.edit-btn:active {
+  background: var(--surface-color) !important;
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+:root[data-theme='dark'] .secondary-action-btn.delete-btn {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+:root[data-theme='dark'] .secondary-action-btn.delete-btn:active {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #dc2626 !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Dark theme support for exercises section */
+:root[data-theme='dark'] .routine-exercises-expanded {
+  background: var(--surface-color) !important;
+  border-top-color: var(--divider-color) !important;
+}
+
+:root[data-theme='dark'] .exercises-section-header {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme='dark'] .section-title h5 {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme='dark'] .exercises-count-badge {
+  background: var(--surface-elevated) !important;
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme='dark'] .exercise-card {
+  background: var(--surface-elevated) !important;
+  border-color: var(--divider-color) !important;
+}
+
+:root[data-theme='dark'] .exercise-card:active {
+  border-color: var(--primary-color) !important;
+}
+
+:root[data-theme='dark'] .exercise-name {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme='dark'] .exercise-stats {
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme='dark'] .exercise-notes {
+  color: var(--text-secondary) !important;
+  background: var(--surface-elevated) !important;
+}
+
+:root[data-theme='dark'] .empty-exercises-state h6 {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme='dark'] .empty-exercises-state p {
+  color: var(--text-secondary) !important;
+}
+
+/* Modal Button Icons */
+.modal-actions .btn-primary .material-symbols-outlined,
+.modal-actions .btn-secondary .material-symbols-outlined {
+  font-size: 18px;
+  margin-right: 4px;
+}
+
+@media (max-width: 768px) {
+  .modal-actions .btn-primary .material-symbols-outlined,
+  .modal-actions .btn-secondary .material-symbols-outlined {
+    font-size: 16px;
+    margin-right: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-actions {
+    flex-direction: row;
+    gap: 8px;
+    padding: 16px 20px;
+  }
+  
+  .modal-actions .btn-secondary {
+    flex: 1;
+    padding: 14px 8px;
+    font-size: 12px;
+    min-height: 48px;
+    background: var(--surface-color);
+    border: 1px solid var(--divider-color);
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  
+  .modal-actions .btn-primary {
+    flex: 2;
+    padding: 14px 12px;
+    font-size: 12px;
+    min-height: 48px;
+    font-weight: 600;
+  }
+  
+  .modal-actions .btn-primary .material-symbols-outlined,
+  .modal-actions .btn-secondary .material-symbols-outlined {
+    font-size: 14px;
+    margin-right: 3px;
+  }
+}
+
+@media (max-width: 360px) {
+  .modal-actions .btn-secondary {
+    padding: 14px 6px;
+    font-size: 11px;
+  }
+  
+  .modal-actions .btn-primary {
+    padding: 14px 8px;
+    font-size: 11px;
+  }
+  
+  .modal-actions .btn-primary .material-symbols-outlined,
+  .modal-actions .btn-secondary .material-symbols-outlined {
+    font-size: 12px;
+    margin-right: 2px;
+  }
+}
+
 .edit-food-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1779,8 +2218,16 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 @media (max-width: 768px) {
   .modal-overlay {
-    padding: 16px;
+    padding: 8px;
     align-items: flex-end;
+  }
+
+  .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 95vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin: 0 !important;
   }
 
   .modal-overlay .card {
@@ -1822,6 +2269,29 @@ input:checked + .slider:before { transform: translateX(22px); }
     font-size: 16px;
     padding: 12px;
     border-radius: 8px;
+  }
+
+  /* Mobile modal actions */
+  .modal-actions {
+    padding: 20px 16px !important;
+    gap: 20px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .modal-actions .btn-icon-only {
+    min-width: 60px !important;
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 20px !important;
+  }
+
+  .modal-actions .btn-icon-only .material-symbols-outlined {
+    font-size: 26px !important;
+  }
+
+  .modal-actions .btn-icon-only:hover .material-symbols-outlined {
+    font-size: 28px !important;
   }
 
   .modal-overlay .form-actions {
@@ -3996,11 +4466,25 @@ textarea:focus-visible {
   margin-bottom: 16px !important;
   background: var(--surface-elevated) !important;
   transition: var(--transition-smooth) !important;
+  position: relative !important;
+  box-shadow: var(--shadow-1) !important;
+}
+
+.exercise-edit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-gradient-start);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 .exercise-edit-card:hover {
   border-color: var(--primary-color) !important;
   box-shadow: var(--shadow-2) !important;
+  transform: translateY(-1px) !important;
 }
 
 .exercise-edit-header {
@@ -4017,6 +4501,17 @@ textarea:focus-visible {
   font-size: 16px !important;
   font-weight: 600 !important;
   color: var(--text-primary) !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exercise-edit-header h4::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--primary-color);
+  border-radius: 50%;
 }
 
 .exercise-edit-grid {
@@ -4041,23 +4536,27 @@ textarea:focus-visible {
 }
 
 .exercise-edit-input {
-  padding: 12px !important;
+  padding: 12px 16px !important;
   border: 1px solid var(--divider-color) !important;
   border-radius: var(--border-radius-sm) !important;
   background: var(--surface-color) !important;
   color: var(--text-primary) !important;
   font-size: 14px !important;
+  font-weight: 500 !important;
   transition: var(--transition-smooth) !important;
+  box-shadow: var(--shadow-inner) !important;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .exercise-edit-input:focus {
   outline: none !important;
   border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.1) !important;
 }
 
 .exercise-edit-textarea {
-  padding: 12px !important;
+  padding: 12px 16px !important;
   border: 1px solid var(--divider-color) !important;
   border-radius: var(--border-radius-sm) !important;
   background: var(--surface-color) !important;
@@ -4067,6 +4566,108 @@ textarea:focus-visible {
   resize: vertical !important;
   min-height: 60px !important;
   transition: var(--transition-smooth) !important;
+  box-shadow: var(--shadow-inner) !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.exercise-edit-textarea:focus {
+  outline: none !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.1) !important;
+}
+
+/* Enhanced Exercise Edit Form Groups */
+.exercise-edit-form-group {
+  margin-bottom: 16px;
+}
+
+.exercise-edit-form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exercise-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .exercise-edit-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* Enhanced Modal Form Groups */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 480px) {
+  .form-group-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* Enhanced Empty States */
+.empty-exercises-state {
+  text-align: center;
+  padding: 32px 20px;
+  background: var(--surface-color);
+  border-radius: var(--border-radius);
+  border: 2px dashed var(--divider-color);
+}
+
+.empty-icon-container {
+  margin-bottom: 12px;
+}
+
+.empty-icon {
+  font-size: 40px !important;
+  color: var(--text-muted);
+  display: block;
+}
+
+.empty-exercises-state h4 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.empty-exercises-state p {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.add-first-exercise {
+  margin: 0 auto !important;
 }
 
 .exercise-edit-textarea:focus {
@@ -4101,6 +4702,11 @@ textarea:focus-visible {
 
 .modal-section {
   margin-bottom: 24px;
+  padding: 20px;
+  background: var(--surface-elevated);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--divider-color);
+  box-shadow: var(--shadow-1);
 }
 
 .modal-section:last-child {
@@ -4112,6 +4718,8 @@ textarea:focus-visible {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--divider-color);
 }
 
 .modal-section-title {
@@ -4119,6 +4727,17 @@ textarea:focus-visible {
   font-weight: 600 !important;
   color: var(--text-primary) !important;
   margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-section-title::before {
+  content: '';
+  width: 4px;
+  height: 16px;
+  background: var(--primary-color);
+  border-radius: 2px;
 }
 
 /* Exercise Analytics Styles */
@@ -4497,23 +5116,48 @@ textarea:focus-visible {
     color: var(--text-primary);
 }
 
-.library-controls {
+.library-header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
     gap: 16px;
-    align-items: center;
 }
 
-.toggle-presets label {
+.preset-toggle {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: fit-content;
+    flex-shrink: 0;
 }
 
-.toggle-presets input[type="checkbox"] {
-    margin: 0;
+.preset-toggle:hover {
+    background: var(--surface-hover);
+    border-color: var(--primary-color);
+}
+
+.preset-toggle.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.preset-toggle .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.preset-toggle .toggle-label {
+    white-space: nowrap;
 }
 
 .library-filters {
@@ -4523,9 +5167,33 @@ textarea:focus-visible {
     flex-wrap: wrap;
 }
 
+/* New row layout for search, toggle, and difficulty */
+.library-filters-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.library-filters-row .preset-toggle {
+    flex-shrink: 0;
+    white-space: nowrap;
+    min-width: auto;
+}
+
+.library-filters-row .difficulty-filter {
+    flex-shrink: 0;
+    min-width: 160px;
+}
+
+.library-filters-row .difficulty-filter select {
+    min-width: 160px;
+}
+
 .search-box {
     flex: 1;
-    min-width: 250px;
+    min-width: 200px;
     position: relative;
     display: flex;
     align-items: center;
@@ -4560,41 +5228,65 @@ textarea:focus-visible {
 
 .category-tabs {
     display: flex;
-    gap: 4px;
-    margin-bottom: 24px;
+    gap: 6px;
+    margin-bottom: 20px;
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding: 8px 4px 12px 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.category-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .category-tabs button {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 10px 16px;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 12px;
     border: 1px solid var(--border-color);
     background: var(--surface-color);
     color: var(--text-secondary);
-    border-radius: 8px;
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 14px;
+    font-size: 12px;
+    font-weight: 500;
     white-space: nowrap;
-    min-width: fit-content;
+    min-width: 44px;
+    min-height: 36px;
+    flex-shrink: 0;
 }
 
-.category-tabs button:hover {
+.category-tabs button:active {
     background: var(--hover-color);
     color: var(--text-primary);
+    transform: scale(0.95);
 }
 
 .category-tabs button.active {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    transform: scale(1.05);
 }
 
 .category-tabs button .material-symbols-outlined {
-    font-size: 18px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* Mobile-specific category tab text handling */
+.category-tabs button .tab-text {
+    display: block;
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .routines-grid {
@@ -4604,48 +5296,133 @@ textarea:focus-visible {
 }
 
 .routine-card {
-    background: var(--surface-color);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 20px;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
+    background: linear-gradient(135deg, 
+        var(--surface-elevated) 0%, 
+        rgba(102, 126, 234, 0.03) 100%) !important;
+    border: 1px solid rgba(102, 126, 234, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 0 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        0 2px 6px rgba(102, 126, 234, 0.08) !important;
 }
 
-.routine-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: var(--primary-color);
-}
-
-.routine-card.preset {
-    background: linear-gradient(135deg, var(--surface-color) 0%, rgba(25, 118, 210, 0.02) 100%);
-}
-
-.routine-card.preset::before {
+.routine-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--primary-color);
+    right: 0;
+    height: 3px;
+    background: linear-gradient(135deg, 
+        var(--primary-color) 0%, 
+        #8b5cf6 50%,
+        #06b6d4 100%);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.routine-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 
+        0 12px 32px rgba(0, 0, 0, 0.12),
+        0 6px 16px rgba(102, 126, 234, 0.15),
+        0 2px 8px rgba(139, 92, 246, 0.1) !important;
+    border-color: rgba(102, 126, 234, 0.2) !important;
+    background: linear-gradient(135deg, 
+        var(--surface-elevated) 0%, 
+        rgba(102, 126, 234, 0.05) 100%) !important;
+}
+
+.routine-card:hover::before {
+    height: 4px;
+    opacity: 1;
+    background: linear-gradient(135deg, 
+        var(--primary-color) 0%, 
+        #8b5cf6 30%,
+        #06b6d4 70%,
+        #10b981 100%);
+}
+
+.routine-card.preset {
+    background: linear-gradient(135deg, 
+        var(--surface-elevated) 0%, 
+        rgba(25, 118, 210, 0.04) 50%,
+        rgba(139, 92, 246, 0.03) 100%) !important;
+    border-color: rgba(25, 118, 210, 0.15) !important;
+}
+
+.routine-card.preset::before {
+    background: linear-gradient(135deg, 
+        #1976d2 0%, 
+        var(--primary-color) 100%) !important;
+}
+
+.routine-card.user {
+    background: linear-gradient(135deg, 
+        var(--surface-elevated) 0%, 
+        rgba(16, 185, 129, 0.04) 50%,
+        rgba(139, 92, 246, 0.03) 100%) !important;
+    border-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.routine-card.user::before {
+    background: linear-gradient(135deg, 
+        #10b981 0%, 
+        #8b5cf6 100%) !important;
 }
 
 .routine-card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     gap: 12px;
+    padding: 20px 20px 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(102, 126, 234, 0.04) 100%);
+    position: relative;
+}
+
+.routine-card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(102, 126, 234, 0.2) 50%, 
+        transparent 100%);
 }
 
 .routine-card-header h4 {
     margin: 0;
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
     font-size: 18px;
+    font-weight: 600;
     line-height: 1.3;
     flex: 1;
+    /* Remove problematic gradient text that causes visibility issues */
+    background: none !important;
+    background-clip: unset !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    transition: color 0.3s ease;
+}
+
+.routine-card:hover .routine-card-header h4 {
+    color: var(--primary-color) !important;
+    /* Remove gradient effects that cause text to disappear */
+    background: none !important;
+    background-clip: unset !important;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .routine-badges {
@@ -4687,14 +5464,23 @@ textarea:focus-visible {
 }
 
 .routine-description {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
     margin: 0 0 16px 0;
-    line-height: 1.5;
+    line-height: 1.6;
     font-size: 14px;
+    padding: 0 20px;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+.routine-card:hover .routine-description {
+    opacity: 1;
+    color: var(--text-primary) !important;
 }
 
 .routine-meta {
     display: flex;
+    padding: 0 20px;
     flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 16px;
@@ -4714,8 +5500,14 @@ textarea:focus-visible {
 
 .routine-actions {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
+    padding: 16px 20px 20px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.5) 0%, 
+        rgba(102, 126, 234, 0.02) 100%);
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+    margin-top: 8px;
 }
 
 .routine-actions .btn-secondary {
@@ -5727,4 +6519,1185 @@ textarea:focus-visible {
     :root[data-theme='dark'] .modal-overlay {
         background: rgba(0,0,0,0.8);
     }
+}
+
+/* Enhanced Workout Section Mobile UI - MOBILE FIRST */
+.workout-actions-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 0 max(4px, env(safe-area-inset-left)) 0 max(4px, env(safe-area-inset-right));
+}
+
+.workout-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 52px;
+}
+
+.new-routine-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.15);
+}
+
+.new-routine-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.import-routine-btn {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  box-shadow: 0 3px 12px rgba(59, 130, 246, 0.15);
+}
+
+.import-routine-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.workout-action-btn .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* Hide action text on mobile */
+.workout-action-btn .action-text {
+  display: none;
+}
+
+/* Mobile Responsive Adjustments for Workout Actions */
+@media (max-width: 480px) {
+  .workout-actions-container {
+    margin-bottom: 12px;
+    gap: 6px;
+  }
+  
+  .workout-action-btn {
+    padding: 12px 14px;
+    font-size: 13px;
+    min-height: 48px;
+  }
+  
+  .workout-action-btn .material-symbols-outlined {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .workout-action-btn {
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+}
+
+/* Mobile Touch Optimization */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection for inputs and text areas */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Optimize scrolling on mobile */
+.routine-exercises-expanded,
+.exercises-list {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Improve button press feedback on mobile */
+.start-workout-button,
+.secondary-action-btn,
+.workout-action-btn,
+.expand-toggle-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Prevent zoom on double-tap for buttons */
+.start-workout-button,
+.secondary-action-btn,
+.workout-action-btn,
+.expand-toggle-btn {
+  touch-action: manipulation;
+}
+
+/* Mobile-specific focus states */
+@media (hover: none) and (pointer: coarse) {
+  .start-workout-button:focus,
+  .secondary-action-btn:focus,
+  .workout-action-btn:focus,
+  .expand-toggle-btn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+/* Optimize for safe area on mobile devices with notches */
+.routine-card-container {
+  margin-left: max(4px, env(safe-area-inset-left));
+  margin-right: max(4px, env(safe-area-inset-right));
+}
+
+/* Enhanced Mobile Routine Actions */
+@media (max-width: 768px) {
+  .routine-actions-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch !important;
+  }
+  
+  .routine-actions {
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .btn-edit, .btn-primary.btn-start, .btn-danger-icon.btn-delete {
+    min-height: 44px;
+    font-size: 13px;
+  }
+  
+  .btn-edit span:not(.material-symbols-outlined),
+  .btn-primary.btn-start span:not(.material-symbols-outlined) {
+    display: none;
+  }
+  
+  /* Ensure edit icon is visible on mobile */
+  .btn-edit .material-symbols-outlined {
+    display: block !important;
+    font-size: 18px !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .btn-primary.btn-start {
+    flex: 1;
+    justify-content: center;
+    margin: 0 8px;
+  }
+  
+  .expand-toggle {
+    align-self: center;
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .routine-actions {
+    gap: 6px;
+  }
+  
+  .btn-edit, .btn-danger-icon.btn-delete {
+    padding: 8px 10px;
+    min-width: 40px;
+  }
+  
+  .btn-primary.btn-start {
+    padding: 10px 16px;
+  }
+}
+
+/* Enhanced Mobile Exercise Layout */
+@media (max-width: 768px) {
+  .exercise-details {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .exercise-stat {
+    font-size: 12px;
+  }
+  
+  .exercise-notes-preview {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+  
+  .routine-exercises {
+    padding: 12px;
+    margin-top: 12px;
+  }
+  
+  .exercise-item {
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .exercise-number {
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercises-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .exercises-header h5 {
+    font-size: 14px;
+  }
+  
+  .exercise-item {
+    padding: 8px;
+    gap: 8px;
+  }
+  
+  .exercise-details {
+    gap: 4px;
+  }
+}
+
+/* Enhanced Workout Library Mobile Styles */
+@media (max-width: 768px) {
+  .workout-library {
+    padding: 0;
+  }
+  
+  .library-header {
+    padding: 0 4px 12px 4px;
+    flex-direction: row;
+    gap: 12px;
+  }
+  
+  .library-header h3 {
+    font-size: 18px;
+    margin-bottom: 0;
+    flex: 1;
+  }
+  
+  .preset-toggle {
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 4px;
+  }
+  
+  .preset-toggle .material-symbols-outlined {
+    font-size: 16px;
+  }
+  
+  .library-filters {
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 4px;
+    margin-bottom: 16px;
+  }
+
+  /* Mobile responsive for new row layout - Keep in same row */
+  .library-filters-row {
+    flex-direction: row;
+    gap: 8px;
+    padding: 0 4px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  
+  .search-box {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .library-filters-row .preset-toggle {
+    flex-shrink: 0;
+    padding: 8px 10px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .library-filters-row .difficulty-filter {
+    flex-shrink: 0;
+    min-width: 100px;
+  }
+
+  .library-filters-row .difficulty-filter select {
+    min-width: 100px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  
+  .difficulty-filter select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  /* Mobile Category Tabs - Allow text but with proper sizing */
+  .category-tabs {
+    gap: 4px;
+    padding: 8px 4px 12px 4px;
+  }
+  
+  .category-tabs button {
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 32px;
+    min-width: auto;
+  }
+  
+  .category-tabs button .material-symbols-outlined {
+    font-size: 14px;
+  }
+  
+  .category-tabs button .tab-text {
+    max-width: 50px;
+  }
+  
+  .routines-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 4px;
+  }
+  
+  .preset-badge {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+  
+  .routine-badges {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .library-filters {
+    gap: 8px;
+  }
+
+  /* Mobile responsive for new row layout - Keep in same row on small screens */
+  .library-filters-row {
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .search-box input {
+    padding: 8px 8px 8px 36px;
+    font-size: 12px;
+  }
+
+  .search-box .material-symbols-outlined {
+    left: 8px;
+    font-size: 16px;
+  }
+  
+  .preset-toggle {
+    padding: 8px 6px;
+    font-size: 10px;
+    gap: 2px;
+    min-width: 60px;
+  }
+  
+  .preset-toggle .material-symbols-outlined {
+    font-size: 14px;
+  }
+
+  .preset-toggle .toggle-label {
+    font-size: 10px;
+  }
+
+  .library-filters-row .difficulty-filter {
+    min-width: 80px;
+  }
+
+  .library-filters-row .difficulty-filter select {
+    min-width: 80px;
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+  
+  .category-tabs {
+    gap: 3px;
+  }
+  
+  .category-tabs button {
+    padding: 5px 8px;
+    font-size: 10px;
+    min-height: 30px;
+  }
+  
+  .category-tabs button .material-symbols-outlined {
+    font-size: 13px;
+  }
+  
+  .category-tabs button .tab-text {
+    max-width: 40px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+  .preset-toggle {
+    padding: 3px 6px;
+    font-size: 10px;
+    gap: 2px;
+  }
+  
+  .preset-toggle .material-symbols-outlined {
+    font-size: 12px;
+  }
+  
+  .category-tabs button {
+    padding: 4px 6px;
+    font-size: 9px;
+    min-height: 28px;
+  }
+  
+  .category-tabs button .material-symbols-outlined {
+    font-size: 12px;
+  }
+  
+  .category-tabs button .tab-text {
+    max-width: 35px;
+  }
+}
+
+/* Icon-only mode for very constrained spaces */
+@media (max-width: 320px) {
+  .category-tabs button .tab-text {
+    display: none;
+  }
+  
+  .category-tabs button {
+    padding: 6px;
+    min-width: 32px;
+    justify-content: center;
+  }
+}
+
+/* Enhanced Workout Card Layout - REDESIGNED UX/UI */
+.routine-card-container {
+  background: var(--surface-elevated);
+  border-radius: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--divider-color);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.04),
+      0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.routine-card-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, 
+      #3b82f6 0%, 
+      #6366f1 25%,
+      #8b5cf6 50%,
+      #ec4899 75%,
+      #06b6d4 100%);
+  transition: all 0.3s ease;
+}
+
+.routine-card-container:hover {
+  transform: translateY(-6px);
+  box-shadow: 
+      0 16px 40px rgba(0, 0, 0, 0.08),
+      0 8px 24px rgba(59, 130, 246, 0.12),
+      0 4px 12px rgba(99, 102, 241, 0.08);
+  border-color: rgba(59, 130, 246, 0.15);
+}
+
+.routine-card-container:hover::before {
+  height: 5px;
+  background: linear-gradient(90deg, 
+      #3b82f6 0%, 
+      #6366f1 20%,
+      #8b5cf6 40%,
+      #ec4899 60%,
+      #06b6d4 80%,
+      #10b981 100%);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.routine-card-container:active {
+  transform: scale(0.99) translateY(-2px);
+}
+
+.routine-card-main {
+  padding: 24px;
+  background: var(--surface-elevated);
+  position: relative;
+}
+
+/* Header Section - Redesigned */
+.routine-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.routine-title-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.routine-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.routine-quick-stats {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  background: var(--surface-color);
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--divider-color);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.stat-item:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.stat-item .material-symbols-outlined {
+  font-size: 16px;
+  color: inherit;
+}
+
+.expand-toggle-btn {
+  background: var(--surface-color);
+  border: 2px solid var(--divider-color);
+  border-radius: 16px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.expand-toggle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.expand-toggle-btn:hover {
+  border-color: var(--primary-color);
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+}
+
+.expand-toggle-btn:hover::before {
+  opacity: 1;
+}
+
+.expand-toggle-btn:hover .material-symbols-outlined {
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.expand-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.expand-toggle-btn .material-symbols-outlined {
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+/* Description Section */
+.routine-description-section {
+  margin-bottom: 16px;
+}
+
+.routine-description {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  background: var(--surface-color);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--divider-color);
+  font-style: italic;
+}
+
+/* Meta Section - Redesigned */
+.routine-meta-section {
+  margin-bottom: 20px;
+}
+
+.meta-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.meta-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.meta-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.meta-badge:hover::before {
+  opacity: 0.1;
+}
+
+.meta-badge.difficulty {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+  color: #d97706;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.meta-badge.difficulty::before {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.meta-badge.category {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.1));
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.meta-badge.category::before {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+
+.meta-badge .material-symbols-outlined {
+  font-size: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Primary Action - Redesigned */
+.routine-primary-action {
+  margin-bottom: 16px;
+}
+
+.start-workout-button {
+  width: 100%;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 
+      0 8px 24px rgba(59, 130, 246, 0.2),
+      0 4px 12px rgba(99, 102, 241, 0.15);
+  min-height: 60px;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.02em;
+}
+
+.start-workout-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.start-workout-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+      0 16px 40px rgba(59, 130, 246, 0.3),
+      0 8px 20px rgba(99, 102, 241, 0.2);
+}
+
+.start-workout-button:hover::before {
+  opacity: 1;
+}
+
+.start-workout-button:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 
+      0 8px 20px rgba(59, 130, 246, 0.25),
+      0 4px 10px rgba(99, 102, 241, 0.15);
+}
+
+.start-workout-button span {
+  position: relative;
+  z-index: 1;
+}
+
+.start-workout-button .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.start-workout-button .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* Secondary Actions - Redesigned */
+.routine-secondary-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.secondary-action-btn {
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px solid var(--divider-color);
+  min-height: 52px;
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-color);
+  color: var(--text-secondary);
+}
+
+.secondary-action-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.secondary-action-btn.edit-btn {
+  border-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.secondary-action-btn.edit-btn::before {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+
+.secondary-action-btn.edit-btn:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+}
+
+.secondary-action-btn.edit-btn:hover::before {
+  opacity: 1;
+}
+
+.secondary-action-btn.edit-btn:hover {
+  color: white;
+}
+
+.secondary-action-btn.delete-btn {
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.secondary-action-btn.delete-btn::before {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.secondary-action-btn.delete-btn:hover {
+  border-color: #ef4444;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.15);
+}
+
+.secondary-action-btn.delete-btn:hover::before {
+  opacity: 1;
+}
+
+.secondary-action-btn.delete-btn:hover {
+  color: white;
+}
+
+.secondary-action-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.secondary-action-btn .material-symbols-outlined {
+  font-size: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.secondary-action-btn span:not(.material-symbols-outlined) {
+  position: relative;
+  z-index: 1;
+  font-weight: 600;
+}
+
+.secondary-action-btn.edit-btn:active {
+  background: #e2e8f0;
+  color: #334155;
+  border-color: #cbd5e1;
+  transform: scale(0.95);
+}
+
+.secondary-action-btn.delete-btn {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.secondary-action-btn.delete-btn:active {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+  transform: scale(0.95);
+}
+
+.secondary-action-btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Hide text labels on mobile for better touch targets */
+.secondary-action-btn span:not(.material-symbols-outlined) {
+  display: none;
+}
+
+/* Expanded Exercises Section - Mobile Optimized */
+.routine-exercises-expanded {
+  background: #fafbfc;
+  border-top: 1px solid #f1f5f9;
+  padding: 16px;
+}
+
+.exercises-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-title .material-symbols-outlined {
+  font-size: 16px;
+  color: #3b82f6;
+}
+
+.section-title h5 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.exercises-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.exercises-count-badge {
+  background: #3b82f6;
+  color: white;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Exercise List - Mobile Optimized */
+.exercises-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exercise-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.exercise-card:active {
+  border-color: #e2e8f0;
+  transform: scale(0.98);
+}
+
+.exercise-index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.exercise-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.exercise-name {
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 6px;
+  line-height: 1.25;
+  font-size: 14px;
+}
+
+.exercise-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.stat-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.stat-group .material-symbols-outlined {
+  font-size: 14px;
+}
+
+.stat-separator {
+  display: none;
+}
+
+.exercise-notes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #64748b;
+  background: #f8fafc;
+  padding: 4px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.exercise-notes .material-symbols-outlined {
+  font-size: 12px;
+  color: #fbbf24;
+}
+
+/* Mobile Responsive for Enhanced Cards */
+@media (max-width: 480px) {
+  .routine-card-main {
+    padding: 14px;
+  }
+  
+  .routine-title {
+    font-size: 15px;
+  }
+  
+  .routine-quick-stats {
+    gap: 10px;
+  }
+  
+  .stat-item {
+    font-size: 11px;
+  }
+  
+  .meta-badges {
+    gap: 4px;
+  }
+  
+  .meta-badge {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  
+  .start-workout-button {
+    padding: 14px 16px;
+    font-size: 14px;
+    min-height: 52px;
+  }
+  
+  .secondary-action-btn {
+    padding: 10px 12px;
+    font-size: 12px;
+    min-height: 40px;
+  }
+  
+  .routine-exercises-expanded {
+    padding: 12px;
+  }
+  
+  .exercise-card {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .exercise-index {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+  
+  .exercise-name {
+    font-size: 13px;
+  }
+  
+  .stat-group {
+    font-size: 11px;
+  }
+  
+  .expand-toggle-btn {
+    padding: 8px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .expand-toggle-btn .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
+/* Extra Small Mobile Devices */
+@media (max-width: 360px) {
+  .routine-card-main {
+    padding: 12px;
+  }
+  
+  .routine-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .expand-toggle-btn {
+    align-self: flex-end;
+    margin-left: 0;
+    margin-top: -8px;
+  }
+  
+  .routine-quick-stats {
+    justify-content: flex-start;
+  }
+  
+  .start-workout-button {
+    padding: 12px 14px;
+    font-size: 13px;
+    min-height: 48px;
+  }
+  
+  .secondary-action-btn {
+    padding: 8px 10px;
+    min-height: 36px;
+  }
+  
+  .exercises-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }

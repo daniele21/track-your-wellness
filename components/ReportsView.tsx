@@ -41,6 +41,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 }) => {
     const [reportType, setReportType] = useState<'daily' | 'weekly'>('weekly');
     const [selectedPeriod, setSelectedPeriod] = useState<string>('');
+    const [showEmptyDays, setShowEmptyDays] = useState(false);
 
     // Calculate daily reports
     const dailyReports = useMemo(() => {
@@ -94,6 +95,18 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
         return reports.reverse(); // Most recent first
     }, [workoutSessions, measurements, nutritionData]);
+
+    // Filter daily reports based on showEmptyDays setting
+    const filteredDailyReports = useMemo(() => {
+        if (showEmptyDays) {
+            return dailyReports;
+        }
+        return dailyReports.filter(report => 
+            report.workouts.length > 0 || 
+            report.nutrition || 
+            report.measurement
+        );
+    }, [dailyReports, showEmptyDays]);
 
     // Calculate weekly reports
     const weeklyReports = useMemo(() => {
@@ -335,8 +348,37 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
             {reportType === 'daily' && (
                 <div className="daily-reports">
+                    <div className="daily-controls" style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
+                            <input 
+                                type="checkbox" 
+                                checked={showEmptyDays}
+                                onChange={(e) => setShowEmptyDays(e.target.checked)}
+                                style={{ marginRight: '4px' }}
+                            />
+                            Mostra giorni senza attività
+                        </label>
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                            ({filteredDailyReports.length} giorni mostrati)
+                        </span>
+                    </div>
+                    
+                    {/* Debug info */}
+                    <div style={{ 
+                        background: 'var(--surface-color)', 
+                        padding: '12px', 
+                        borderRadius: '8px', 
+                        marginBottom: '16px',
+                        fontSize: '12px',
+                        color: 'var(--text-secondary)'
+                    }}>
+                        <div>Oggi: {new Date().toLocaleDateString('it-IT')}</div>
+                        <div>Prime 3 date generate: {dailyReports.slice(0, 3).map(r => new Date(r.date).toLocaleDateString('it-IT')).join(', ')}</div>
+                        <div>Ultime 3 date generate: {dailyReports.slice(-3).map(r => new Date(r.date).toLocaleDateString('it-IT')).join(', ')}</div>
+                        <div>Date con dati: {filteredDailyReports.slice(0, 5).map(r => new Date(r.date).toLocaleDateString('it-IT')).join(', ')}</div>
+                    </div>
                     <div className="reports-list">
-                        {dailyReports.slice(0, 14).map((report) => (
+                        {filteredDailyReports.slice(0, 14).map((report) => (
                             <div key={report.date} className="daily-report-card">
                                 <div className="daily-report-header">
                                     <h4>

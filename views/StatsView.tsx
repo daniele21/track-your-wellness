@@ -24,11 +24,24 @@ export const StatsView: React.FC<StatsViewProps> = ({ dailyLogs, theme, bodyMeas
         const proteinData: number[] = [];
         const fatsData: number[] = [];
         
+        // Debug: Log current date and calculated dates
+        const today = new Date();
+        console.log('Today:', today.toISOString(), 'Formatted:', formatDate(today));
+        console.log('Available dailyLogs keys:', Object.keys(dailyLogs));
+        
         for (let i = 6; i >= 0; i--) {
             const d = new Date();
             d.setDate(d.getDate() - i);
-            labels.push(d.toLocaleDateString('it-IT', { weekday: 'short' }));
-            const log = dailyLogs[formatDate(d)];
+            const dateKey = formatDate(d);
+            const displayLabel = d.toLocaleDateString('it-IT', { day: '2-digit', month: 'short' });
+            
+            console.log(`Day ${i}: Date object:`, d.toISOString(), 'Key:', dateKey, 'Label:', displayLabel);
+            
+            labels.push(displayLabel);
+            const log = dailyLogs[dateKey];
+            
+            console.log(`Log for ${dateKey}:`, log ? 'Found' : 'Not found');
+            
             if (log) {
                 const totals = { carbs: 0, protein: 0, fats: 0 };
                 for (const mealType of MEAL_TYPES) {
@@ -87,7 +100,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ dailyLogs, theme, bodyMeas
         for (let i = 6; i >= 0; i--) {
             const d = new Date();
             d.setDate(d.getDate() - i);
-            labels.push(d.toLocaleDateString('it-IT', { weekday: 'short' }));
+            labels.push(d.toLocaleDateString('it-IT', { day: '2-digit', month: 'short' }));
             const log = dailyLogs[formatDate(d)];
             if (log) {
                 let totalCalories = 0;
